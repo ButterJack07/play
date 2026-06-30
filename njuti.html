@@ -402,6 +402,16 @@ function getType(){
   return code;
 }
 function setExtra(){
+  const baseVals=ans.slice(0,12).filter(v=>v!==undefined);
+  const allSame=baseVals.length===12&&baseVals.every(v=>v===baseVals[0]);
+  if(allSame){
+    extraQ=[
+      {t:'你对参与社团活动、学生组织和校园文化有浓厚的兴趣。', map:{}},
+      {t:'你希望就读的城市有丰富的历史文化底蕴和发展机会。', map:{}},
+      {t:'你认为大学阶段最重要的是探索自我、发现兴趣所在。', map:{}}
+    ];
+    return;
+  }
   const t=TYPES[getType()];
   extraQ=t&&t.ex?t.ex:[];
 }
