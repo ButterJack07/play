@@ -1,0 +1,378 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>NJUti · 测测你适合上南京大学哪个专业</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: -apple-system, 'PingFang SC', 'Microsoft YaHei', sans-serif;
+    background: linear-gradient(135deg, #1a0533 0%, #2d1b69 35%, #4a1a8a 65%, #6a1b9a 100%);
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+    overflow-x: hidden;
+  }
+  .container { width: 100%; max-width: 720px; position: relative; }
+  .card {
+    background: rgba(255,255,255,0.07);
+    backdrop-filter: blur(24px);
+    -webkit-backdrop-filter: blur(24px);
+    border: 1px solid rgba(255,255,255,0.10);
+    border-radius: 32px;
+    padding: 44px 40px;
+    box-shadow: 0 32px 80px rgba(0,0,0,0.5);
+    transition: all 0.4s ease;
+    position: relative;
+    z-index: 1;
+  }
+  @media (max-width: 520px) { .card { padding: 28px 18px; border-radius: 24px; } }
+  .header { text-align: center; margin-bottom: 36px; }
+  .header .badge {
+    display: inline-block;
+    background: linear-gradient(135deg, #ce93d8, #ab47bc);
+    color: #fff; font-size: 11px; font-weight: 700; letter-spacing: 2px;
+    padding: 5px 16px; border-radius: 20px; margin-bottom: 14px;
+  }
+  .header h1 { color: #fff; font-size: 32px; font-weight: 800; letter-spacing: 2px; }
+  .header h1 span { color: #e1bee7; }
+  .header p { color: rgba(255,255,255,0.5); font-size: 14px; margin-top: 8px; letter-spacing: 0.5px; }
+  .progress-wrap { display: flex; align-items: center; gap: 12px; margin-bottom: 30px; }
+  .progress-bar {
+    flex: 1; height: 4px; background: rgba(255,255,255,0.10);
+    border-radius: 4px; overflow: hidden;
+  }
+  .progress-bar .fill {
+    height: 100%; width: 0%;
+    background: linear-gradient(90deg, #ce93d8, #7c4dff);
+    border-radius: 4px; transition: width 0.5s cubic-bezier(0.22,1,0.36,1);
+    box-shadow: 0 0 10px rgba(124,77,255,0.3);
+  }
+  .progress-label { color: rgba(255,255,255,0.4); font-size: 13px; font-weight: 600; min-width: 44px; text-align: right; }
+  .slide { animation: fadeSlideIn 0.45s ease forwards; }
+  @keyframes fadeSlideIn { from { opacity: 0; transform: translateY(18px); } to { opacity: 1; transform: translateY(0); } }
+  .q-number { color: rgba(255,255,255,0.25); font-size: 13px; font-weight: 600; letter-spacing: 1px; margin-bottom: 6px; }
+  .q-statement {
+    color: #fff; font-size: 17px; font-weight: 600; line-height: 1.7; margin-bottom: 28px;
+    padding: 16px 20px; background: rgba(255,255,255,0.04); border-radius: 14px;
+    border-left: 3px solid rgba(206,147,216,0.4);
+  }
+  @media (max-width: 520px) { .q-statement { font-size: 15px; padding: 14px 16px; } }
+  .likert { display: flex; gap: 8px; margin-bottom: 8px; }
+  .likert-opt {
+    flex: 1; text-align: center; cursor: pointer; transition: all 0.25s cubic-bezier(0.34,1.56,0.64,1);
+    padding: 12px 4px; border-radius: 12px; border: 1.5px solid rgba(255,255,255,0.08);
+    background: rgba(255,255,255,0.03); -webkit-user-select: none; user-select: none;
+    position: relative; overflow: hidden;
+  }
+  .likert-opt::after {
+    content: ''; position: absolute; inset: 0; border-radius: 12px;
+    background: radial-gradient(circle at var(--mx,50%) var(--my,50%), rgba(206,147,216,0.25) 0%, transparent 60%);
+    opacity: 0; transition: opacity 0.4s ease; pointer-events: none;
+  }
+  .likert-opt:hover { background: rgba(255,255,255,0.07); border-color: rgba(206,147,216,0.25); transform: translateY(-2px); box-shadow: 0 6px 20px rgba(206,147,216,0.1); }
+  .likert-opt:active { transform: scale(0.94); }
+  .likert-opt .num { display: block; font-size: 16px; font-weight: 800; color: rgba(255,255,255,0.25); margin-bottom: 4px; transition: 0.25s cubic-bezier(0.34,1.56,0.64,1); }
+  .likert-opt .lbl { display: block; font-size: 12px; color: rgba(255,255,255,0.4); line-height: 1.3; transition: 0.25s ease; }
+  .likert-opt.selected {
+    background: rgba(206,147,216,0.18); border-color: #ce93d8;
+    transform: scale(1.05); box-shadow: 0 0 24px rgba(206,147,216,0.25), 0 0 60px rgba(206,147,216,0.08);
+    animation: selectPop 0.35s cubic-bezier(0.34,1.56,0.64,1);
+  }
+  .likert-opt.selected::after { opacity: 1; }
+  .likert-opt.selected .num { color: #fff; transform: scale(1.15); }
+  .likert-opt.selected .lbl { color: #e1bee7; }
+  @keyframes selectPop {
+    0% { transform: scale(1); }
+    40% { transform: scale(1.08); }
+    70% { transform: scale(1.03); }
+    100% { transform: scale(1.05); }
+  }
+  .likert-opt.exit { animation: exitShrink 0.3s ease forwards; }
+  @keyframes exitShrink {
+    0% { transform: scale(1); opacity: 1; }
+    100% { transform: scale(0.85); opacity: 0; }
+  }
+  @keyframes rippleBurst {
+    0% { transform: scale(0); opacity: 0.6; }
+    100% { transform: scale(8); opacity: 0; }
+  }
+  @keyframes particleFly {
+    0% { transform: translate(0,0) scale(1); opacity: 1; }
+    100% { transform: translate(var(--px),var(--py)) scale(0); opacity: 0; }
+  }
+  .slide-out { animation: fadeOutSlide 0.25s ease forwards; }
+  @keyframes fadeOutSlide {
+    from { opacity: 1; transform: translateY(0); }
+    to { opacity: 0; transform: translateY(-12px); }
+  }
+  .slide-in { animation: fadeSlideIn 0.35s ease forwards; }
+  @media (max-width: 520px) { .likert { gap: 4px; } .likert-opt { padding: 10px 2px; border-radius: 8px; } .likert-opt .num { font-size: 14px; } .likert-opt .lbl { font-size: 10px; } }
+  .actions { display: flex; gap: 12px; margin-top: 28px; }
+  .btn { padding: 13px 28px; border: none; border-radius: 14px; font-size: 14px; font-weight: 700; cursor: pointer; transition: all 0.25s ease; letter-spacing: 0.5px; }
+  .btn-primary { flex: 1; background: linear-gradient(135deg, #ce93d8, #7c4dff); color: #fff; box-shadow: 0 4px 20px rgba(124,77,255,0.3); }
+  .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 6px 28px rgba(124,77,255,0.45); }
+  .btn-primary:disabled { opacity: 0.3; cursor: not-allowed; transform: none; }
+  .btn-ghost { background: rgba(255,255,255,0.06); color: rgba(255,255,255,0.5); border: 1px solid rgba(255,255,255,0.08); }
+  .btn-ghost:hover { background: rgba(255,255,255,0.10); color: #fff; }
+  .result-area { text-align: center; animation: fadeSlideIn 0.6s ease forwards; }
+  .result-icon { font-size: 52px; margin-bottom: 8px; line-height: 1.2; }
+  .result-title { color: #fff; font-size: 24px; font-weight: 800; margin-bottom: 2px; }
+  .result-sub { color: rgba(255,255,255,0.4); font-size: 14px; margin-bottom: 20px; }
+  .result-major-box { background: linear-gradient(135deg, rgba(206,147,216,0.12), rgba(124,77,255,0.12)); border: 1.5px solid rgba(206,147,216,0.2); border-radius: 16px; padding: 18px 24px; margin-bottom: 20px; }
+  .result-major-box .major { color: #fff; font-size: 20px; font-weight: 800; }
+  .result-major-box .dept { color: rgba(255,255,255,0.4); font-size: 13px; margin-top: 4px; }
+  .result-section { text-align: left; margin-bottom: 16px; background: rgba(255,255,255,0.03); border-radius: 12px; padding: 16px 18px; }
+  .result-section .s-label { color: rgba(255,255,255,0.3); font-size: 11px; font-weight: 700; letter-spacing: 1px; margin-bottom: 8px; text-transform: uppercase; }
+  .result-section .s-text { color: rgba(255,255,255,0.7); font-size: 14px; line-height: 1.8; }
+  .full-link { display: inline-block; margin: 6px 0 14px; color: rgba(206,147,216,0.75); font-size: 13px; text-decoration: none; border: 1px solid rgba(206,147,216,0.2); border-radius: 8px; padding: 7px 18px; transition: 0.2s; }
+  .full-link:hover { background: rgba(206,147,216,0.1); border-color: #ce93d8; color: #fff; }
+  .result-daily { text-align: left; background: rgba(255,255,255,0.03); border-radius: 12px; padding: 16px 18px; margin-bottom: 24px; }
+  .result-daily .label { color: rgba(255,255,255,0.3); font-size: 11px; font-weight: 700; letter-spacing: 1px; margin-bottom: 8px; }
+  .result-daily .text { color: rgba(255,255,255,0.6); font-size: 14px; line-height: 1.7; }
+  .result-actions { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; }
+  .result-actions .btn { min-width: 140px; }
+  .stars { position: fixed; top: 0; left: 0; right: 0; bottom: 0; pointer-events: none; z-index: 0; overflow: hidden; }
+  .star { position: absolute; width: 2px; height: 2px; background: #fff; border-radius: 50%; opacity: 0.3; animation: twinkle var(--dur) ease-in-out infinite alternate; }
+  @keyframes twinkle { 0% { opacity: 0.1; transform: scale(0.8); } 100% { opacity: 0.5; transform: scale(1.2); } }
+  .footer { text-align: center; margin-top: 18px; color: rgba(255,255,255,0.15); font-size: 12px; letter-spacing: 1px; }
+</style>
+</head>
+<body>
+<div class="stars" id="stars"></div>
+<div class="container">
+  <div class="card" id="app">
+    <div class="header">
+      <div class="badge">✦ NJUti 2026</div>
+      <h1><span>NJU</span>ti</h1>
+      <p>16道选择题 · 找到与你最匹配的南大专业</p>
+    </div>
+    <div class="progress-wrap">
+      <div class="progress-bar"><div class="fill" id="progressFill"></div></div>
+      <span class="progress-label" id="progressLabel">0/16</span>
+    </div>
+    <div id="dynamicArea"></div>
+    <div class="footer">南京大学 NJUti · 纯属娱乐 · 博君一笑</div>
+  </div>
+</div>
+<script>
+const M = [
+  {n:'工科试验班', d:'现代工程与应用科学学院、能源与资源学院、生物医学工程学院、工程管理学院', i:'🔧', t:'宽口径工科探索者',
+   io:'本部传统工科宽口径大类，大一统一工科基础平台课，覆盖光电、材料、新能源、碳中和、生物医学、工业管理多领域理工交叉，入校后依据分流规则自主选择上述工科专业。',
+   f:'光电信息科学与工程、材料物理、材料化学、碳中和科学与工程、生物医学工程、工业工程、金融工程等多个方向自由分流，国家级一流本科专业建设点覆盖大部分分流方向。',
+   da:'在现代工程学院的实验室里做材料拉伸实验，数据出来的一刻忍不住点头；下午骑着车穿过仙林校区去工程管理学院听工业工程的案例课，发现同一个问题有完全不同的解法。'},
+  {n:'工科试验班(智慧人居实验班)', d:'建筑与城市规划学院', i:'🏙️', t:'未来城市的规划师',
+   io:'建筑空间+智能建造交叉实验班，融合建筑设计、城市规划、数字仿真、人工智能技术，培养数字城市、智能人居复合型人才。',
+   f:'建筑学、城乡规划双专业分流，依托建筑与城市规划学院的数字设计实验室与虚拟仿真平台，课程涵盖智能建筑、城市计算等前沿方向。',
+   da:'在建良楼的设计教室里用参数化建模工具生成建筑表皮方案，旁边同学用AI跑出来的城市肌理图让你眼前一亮；下午去鼓楼校区看北大楼，在心里默默对比着古典立面与现代幕墙的比例关系。'},
+  {n:'工科试验班(未来技术学院)', d:'未来技术学院', i:'🔬', t:'前沿科技的破局者',
+   io:'新工科前沿交叉特区，院士导师团队，本研一体化培养，聚焦芯片、智能机器人、生物医疗、碳中和颠覆性技术，跨学科科研直通研究生阶段。',
+   f:'分流专业涵盖智能科学与技术(自动化机器人方向)、集成电路设计与集成系统、生物医学工程、碳中和科学与工程，施毅院士领衔的双聘导师团队为每位学生定制个性化培养方案。',
+   da:'在苏州校区仁寿山脚下的未来实验室里，和队友围在一起调试机器人运动控制算法；施毅院士来项目组听汇报，随口一句点拨就让困扰你们三天的bug迎刃而解。'},
+  {n:'技术科学试验班', d:'机器人与自动化学院、集成电路学院、数字经济与管理学院（苏州校区）', i:'⚙️', t:'苏州校区的开拓者',
+   io:'南大苏州校区专属工科大类，整合自动化、微电子、数字经济学科，覆盖智能制造、芯片设计、数字产业赛道，多工科方向自由分流。',
+   f:'自动化机器人方向、集成电路设计与集成系统、数字经济三个方向任选，苏州校区毗邻长三角高新产业集群，实习与就业资源得天独厚。',
+   da:'清晨在苏州校区的智慧教室里讨论自动化控制原理，窗外就是现代化的产业园；下午在集成电路实训平台上手操作EDA工具，晚上和同学去校区旁边的太湖边散步。'},
+  {n:'理科试验班类(化学与生命科学类)', d:'化学学院、生命科学学院', i:'🧪', t:'分子世界的好奇者',
+   io:'化学、生命科学基础学科交叉大类，打通理化、生物、生物医药赛道，支持生物信息、合成生物学跨方向深造。',
+   f:'化学、应用化学、化学生物学、生物科学、生物技术、生态学六个方向自由分流，依托化学与生物医药创新研究院等平台，本科即可进入前沿实验室参与科研。',
+   da:'在仙林校区化学楼里合成了一个新的有机化合物，旋蒸结束后产物纯度比预期还高；下午去生命科学学院的温室观察拟南芥的生长表型，和师兄讨论基因编辑实验的下一步方案。'},
+  {n:'理科试验班类(地球科学与资源环境类)', d:'环境学院、地球科学与工程学院、地理与海洋科学学院、大气科学学院', i:'🌍', t:'地球的守护者',
+   io:'全域地学交叉平台，覆盖环境、地质、地理、海洋、大气五大地球科学领域，资源、生态、空间信息复合培养。',
+   f:'环境工程、环境科学、地质学、地球物理学、行星科学、地理信息科学、大气科学、应用气象学等十余个方向自由分流，拥有多个国家级野外科学观测研究站。',
+   da:'在仙林校区的地球科学博物馆里对着岩石薄片看显微镜，认出了一种典型的花岗岩结构；野外实习时在汤山地质剖面边听教授讲解，边在记录本上画地层素描。'},
+  {n:'理科试验班类(数理科学类)', d:'数学学院、物理学院', i:'📐', t:'公式背后的哲人',
+   io:'基础数理大类，数学、物理、声学纯理科宽口径分流，面向基础科研、人工智能、金融量化、声学工程输送数理复合型人才。',
+   f:'数学与应用数学、信息与计算科学、统计学、物理学、应用物理学、声学六个方向自由选择，数学和物理学科均为国家"双一流"建设学科。',
+   da:'在数学学院大楼的自习室里推导泛函分析的一道难题，草稿纸铺满了整张桌子；下午去物理学院的近代物理实验室做全息干涉实验，激光在台面上投出漂亮的条纹。'},
+  {n:'理科试验班(匡亚明学院励行班)', d:'匡亚明学院', i:'⭐', t:'拔尖计划的先行者',
+   io:'国家基础学科拔尖计划2.0专项，执行"4个100%"政策（100%自主选专业、100%配科研导师、100%国际交流机会、100%本研贯通通道），全理工专业无限制自由分流。',
+   f:'全校35个理工类专业全部开放，数学、物理、化学、计算机等方向随心组合，大一起即配备科研导师，本科阶段可深度参与国家级科研项目。',
+   da:'在匡亚明学院的学术报告厅里听了一场诺贝尔奖得主的讲座，结束后追上去问了一个憋了半小时的问题；下午和导师讨论暑研方向的选择，导师说"你想做什么我都支持"。'},
+  {n:'理科试验班(匡亚明学院大理科班)', d:'匡亚明学院', i:'🎓', t:'通识教育的践行者',
+   io:'南大标志性宽口径大理科平台，大一大二统一数理化生计算机通识课程，多次分流机会，打通全部理工基础与应用学科，基础学科交叉拔尖培养。',
+   f:'全校35个理工类专业均可选择，前两年奠定数理化生计算机的宽厚基础，后期可跨学科组合，保研率领先全校。',
+   da:'上午在杜厦图书馆四楼刷数学分析习题，下午去化学楼做定量分析实验，晚上和匡院同学在食堂聊各自想去的分流方向——每个人想去的专业都不一样。'},
+  {n:'天文学(应天实验室至诚班)', d:'天文与空间科学学院', i:'🌌', t:'宇宙的仰望者',
+   io:'至诚计划本研贯通专项，对接应天实验室，融合天文学、空间科学、微电子、天文大数据，院士全程指导，本科直连硕博深空探测战略人才培养。',
+   f:'全国排名第一的天文学科，院士全程带班，配备大口径望远镜与卫星载荷仿真平台，采用"3+1+X"本研贯通模式，定向输送空天科研人才。',
+   da:'在仙林校区天文台调试光谱仪，透过望远镜看土星环，心里默默算着它的轨道参数；应天实验室里跟院士团队讨论系外行星的大气成分反演结果，兴奋到忘了吃晚饭。'},
+  {n:'电子信息类', d:'电子科学与工程学院', i:'📡', t:'信号背后的解码者',
+   io:'本部电子信息大类，覆盖通信、微电子、声学、低空工程、芯片设计，硬件、信号处理、射频工程多方向交叉。',
+   f:'通信工程(低空工程实验班)、电子信息科学与技术、微电子科学与工程、通信工程、集成电路设计与集成系统五个方向分流，多个方向为国家级一流本科专业。',
+   da:'在电子学院实验室里搭了一个简单的FM收发电路，听到耳机里传来清晰的广播声时差点跳起来；下午去听通信工程实验班的低空经济讲座，发现无人机交通管理比想象中复杂得多。'},
+  {n:'集成电路设计与集成系统(至诚班)', d:'集成电路学院、电子科学与工程学院', i:'🔬', t:'中国芯的筑梦人',
+   io:'至诚本研贯通，国家示范性微电子学院专项，半导体物理、芯片架构、集成电路全链条交叉，对接国家级芯片平台，本硕一体化芯片领军人才。',
+   f:'院士+头部芯片企业CTO双导师制，与中芯国际、中兴等龙头企业共建实训产线，采用"3+1+X"本研贯通模式，重点培养芯片领域战略领军人才。',
+   da:'在EDA实验室里盯着芯片版图布局布线，和一根关键信号线的寄生参数较劲了整个下午；去中芯国际的产线参观，看到晶圆上纳米级的纹路时倒吸一口凉气。'},
+  {n:'电子信息科学与技术(电子英语实验班)(双学士学位)', d:'电子科学与工程学院、外国语学院', i:'🌐', t:'跨界的科技使者',
+   io:'工+文双学位联合项目，主修电子信息工程，辅修英语，毕业授予工学、文学双学位，培养具备国际商务、涉外研发能力的电子信息人才。',
+   f:'2026年全新开设的双学士学位项目，电子科学与工程学院与外国语学院联合培养，兼顾硬核电子技术与国际化语言能力，面向全球科技竞争。',
+   da:'上午在基础实验楼焊电路板，下午穿过大活赶去外国语学院上科技英语写作；在国际学术会议上用英文流利地做poster展示，被一位MIT教授追问了十分钟细节。'},
+  {n:'人工智能', d:'人工智能学院', i:'🤖', t:'AI时代的践行者',
+   io:'普通人工智能专业，覆盖机器学习、计算机视觉、自然语言处理、类脑智能，数学、计算机深度交叉，面向通用AI工程研发。',
+   f:'依托机器学习与数据挖掘国家级平台，课程涵盖AI全栈技术，与华为、字节跳动等头部企业建立联合实验室，实习与就业资源丰富。',
+   da:'在人工智能学院的实验室里训练图像分类模型，调了一下午超参数终于把准确率提了2个点；和周志华教授课上讲的内容一结合，顿时理解了梯度背后的数学直觉。'},
+  {n:'人工智能(至诚班)', d:'人工智能学院', i:'🧠', t:'智能边疆的开拓者',
+   io:'至诚本研贯通拔尖班，人工智能+数学+集成电路跨学科融合，对接国家级AI实验室，本硕博连贯培养战略人工智能科研人才。',
+   f:'周志华、谭铁牛院士领衔师资，执行"3+1+X"本研贯通体系，校企双导师协同，对接华为、中国移动等头部企业实训资源。',
+   da:'和导师讨论强化学习在机器人控制中的应用，发现自己的推导中有个关键假设不成立；在华为的AI实训平台上跑完一个大模型推理任务，看着结果长舒一口气。'},
+  {n:'计算机科学与技术', d:'计算机学院', i:'💻', t:'数字世界的建筑师',
+   io:'计算机核心基础专业，覆盖系统架构、算法、高性能计算、网络安全，数学与计算机理论、软件工程交叉。',
+   f:'依托连续三轮全国学科评估第一的计算机软件新技术国家重点实验室，课程体系涵盖从理论到系统的全栈计算机科学。',
+   da:'在计算机系楼的机房里调试分布式系统的大作业，debug到凌晨终于跑通了第一个完整用例；和同学在走廊的黑板前争论一个算法的时间复杂度，谁也说服不了谁。'},
+  {n:'计算机科学与技术(至诚班)', d:'计算机学院', i:'⚡', t:'系统底层的征服者',
+   io:'至诚本研贯通专项，聚焦底层系统、可信计算、高性能计算，本科阶段同步参与国家级计算机科研项目，直通研究生阶段。',
+   f:'吕建院士牵头，背靠国家重点实验室，独享至诚计划本研贯通通道，优先分配国家级科研课题和头部企业实习名额。',
+   da:'在吕建院士的实验室里攻关并行计算中的任务调度问题，读论文读到一半突然有了新思路；深夜走出计算机系楼，仙林校区的路灯把影子拉得很长，心情却很畅快。'},
+  {n:'计算机科学与技术(计算机金融实验班)(双学士学位)', d:'计算机学院、工程管理学院', i:'📈', t:'科技金融的双栖者',
+   io:'江苏省首个计算机金融复合双学位项目，计算机技术+金融学融合，主攻金融科技、量化交易、风控建模，毕业授予工学、经济学双学位。',
+   f:'计算机学院与工程管理学院联合培养，行业真实金融项目实战教学，超六成毕业生进入海内外顶尖院校金融科技方向深造。',
+   da:'在工程管理学院的实验室里用Python搭建量化回测系统，跑完策略曲线的那一刻忍不住喊了声"nice"；晚上在宿舍同时肝计算机的操作系统大作业和金融工程的风险模型报告。'},
+  {n:'软件工程(智能化软件)', d:'软件学院', i:'🖥️', t:'智能应用的创造者',
+   io:'国家级特色化示范性软件学院常规方向，侧重AI软件、大数据、云计算、工业软件开发，计算机与智能技术交叉。',
+   f:'软件工程国家级一流本科专业，课程覆盖AI软件、大数据、云计算、工业软件等前沿方向，产教深度融合，就业竞争力突出。',
+   da:'在软件学院的智慧教室里和队友一起做云原生应用开发，前后端联调成功时击掌庆祝；在GitHub上开源了一个小工具，收到第一个star时开心了整整一天。'},
+  {n:'软件工程(至诚班)', d:'软件学院', i:'🔒', t:'基础软件的脊梁',
+   io:'至诚本研贯通高端软件专项，聚焦关键基础软件、工业软件、网络安全，全程参与国家级软件攻关项目，本研连贯培养。',
+   f:'依托教育部特色化示范性软件学院，院士与行业总工程师联合指导，配套全流程软件研发实训平台，攻坚基础软件"卡脖子"难题。',
+   da:'在软件实训平台上从需求分析一路干到系统部署，code review被总工批了三轮才终于通过；参与国产数据库内核开发，发现并修复了一个隐藏很深的内存泄漏。'},
+  {n:'软件工程(软工商业创新班)(双学士学位)', d:'软件学院、商学院', i:'🏢', t:'数字转型的操盘手',
+   io:'工+管双学位项目，软件工程+工商管理融合，培养互联网产品经理、产业数字化技术管理复合型人才，授予工学、管理学双学位。',
+   f:'软件学院与商学院强强联合，聚焦零售、智能制造、服务业数字化转型，兼顾代码开发、项目统筹与商业市场分析能力。',
+   da:'上午在软件学院写微服务接口，下午穿过校园去商学院做数字化案例的小组pre；数字化转型实战项目中同时画架构图和写商业计划书，队友说你一个人干了半支队伍的活。'},
+  {n:'软件工程(软工经济创新班)(双学士学位)', d:'软件学院、商学院', i:'📊', t:'数字经济的分析师',
+   io:'工+经双学位项目，软件工程+经济学融合，面向数字经济、产业智能化赛道，培养数字产业复合型人才，授予工学、经济学双学位。',
+   f:'软件工程与经济学交叉培养，聚焦数字产业化、产业数字化，融合软件开发与经济定量分析能力，解决产业经济与数字金融实际问题。',
+   da:'用爬虫抓了某电商平台一整季度的价格数据，然后用计量模型分析出隐藏的定价策略；在数字经济研究课上展示分析结果时，老师说这是研究生水平的报告。'},
+  {n:'智能科学与技术(至诚班)', d:'智能科学与技术学院', i:'🤖', t:'智能系统的架构师',
+   io:'至诚本研贯通专项，融合自动化、人工智能、机器人、具身智能，对接智能制造前沿实验室，智能系统拔尖人才培养。',
+   f:'2026年至诚计划新增班型，依托人工智能学院与双一流计算机学科，院士领衔导师团队，配套国家级智能系统科研平台和头部机器人企业实训基地。',
+   da:'在机器人实验室里调试自主导航算法，看着机器人第一次顺利绕过所有障碍物时差点鼓掌；参加全国智能车竞赛，在炜华体育场的跑道上通宵优化控制策略。'},
+  {n:'环境科学与工程类(环境与健康实验班)', d:'环境学院', i:'🌿', t:'环境与健康的守望者',
+   io:'环境与公共卫生交叉实验班，融合环境治理、毒理学、预防医学，聚焦环境污染与人体健康风险评估复合领域。',
+   f:'环境工程、环境科学两个国家级一流本科专业方向，依托环境学院的国家级科研平台，聚焦环境与健康的交叉前沿领域。',
+   da:'在环境学院实验室里分析水样中的重金属含量，数据结果显示治理后的浓度显著低于国标；下午在仙林校区采集大气颗粒物样本，和同学讨论PM2.5对人体健康的长期影响。'},
+  {n:'临床医学(5+3一体化)', d:'医学院', i:'🏥', t:'临床一线的实干家',
+   io:'医本硕贯通项目，5年本科临床医学+3年住院医师规范化培训，临床、病理、影像医学内部交叉，毕业同步取得执业医师规培证书。',
+   f:'依托鼓楼医院、仙林附属医院等多家三甲临床平台，临床教学资源丰富，毕业后同步取得执业医师资格证与规培证。',
+   da:'在鼓楼医院跟着主治医师查房，学习如何通过听诊判断心脏杂音的性质；下午在病理科看切片，老师指着镜下的一片区域说"这就是典型的肿瘤细胞形态"。'},
+  {n:'临床医学(卓越医师班)', d:'医学院', i:'❤️', t:'生命的守护神',
+   io:'医学拔尖复合班，医工、医理深度交叉，本硕博贯通培养，融合基础医学、临床医学、生物医学工程，兼顾临床诊疗与医学科研。',
+   f:'设置八年制本博贯通、5+3一体化两条路径，动态选拔直博，实行基础、临床、科研一体化训练，毕业可取得医学博士或硕士+规培双证。',
+   da:'在仙林校区的基础医学实验室里做细胞培养实验，小心翼翼地用移液枪操作；下午去鼓楼医院观摩一台心脏搭桥手术，看到主刀医生行云流水的操作时心里涌起一股敬意。'},
+  {n:'口腔医学', d:'医学院', i:'🦷', t:'笑容的修复师',
+   io:'独立医学专业，覆盖口腔临床、颌面外科、口腔生物医用材料，口腔诊疗与生物材料交叉培养。',
+   f:'口腔医学独立培养，课程涵盖口腔内科、口腔颌面外科、口腔修复、口腔正畸及口腔生物材料等方向，临床实习在附属口腔医院进行。',
+   da:'在仿头模实验室里练习牙体制备，握着高速涡轮手机的手稳定得让自己都惊讶；下午在口腔医学院听教授讲种植牙的材料学进展，才发现一颗假牙背后的科技含量远超想象。'},
+  {n:'工业工程(智能系统集成实验班)(双学士学位)', d:'工程管理学院、机器人与自动化学院', i:'🏭', t:'智慧系统的优化大师',
+   io:'工业工程+自动化、智能制造交叉双学位项目，面向智能工厂、工业数字管控、生产系统优化，培养智能制造复合型管理技术人才。',
+   f:'工业工程+自动化双学士学位，推行三导师制，遵循"科学-技术-工程-管理-人文"五位一体育人体系，聚焦企业智能化改造。',
+   da:'用仿真软件给一家制造企业做了产线优化方案，layout改了三版后效率提升了18%；在智慧系统实验室里调试AGV小车的调度算法，看着它在模拟产线上顺畅运行。'},
+  {n:'社会科学试验班', d:'社会学院、政府管理学院、国际关系学院、信息管理学院', i:'👥', t:'社会的洞察者',
+   io:'人文社科大类平台，覆盖社会学、公共管理、国际关系、图书情报多学科，数字治理、全球治理交叉方向可选，宽口径社科分流。',
+   f:'社会学、社会工作、应用心理学、政治学与行政学、行政管理、国际政治、信息管理与信息系统、图书馆学、档案学、编辑出版学等多方向自由分流。',
+   da:'在社会学院的资料室里整理田野调查的访谈记录，发现有几位受访者不约而同地提到了同一个关键词；下午去政府管理学院听一场关于数字治理的讲座，笔记记了满满三页。'},
+  {n:'人文科学试验班', d:'文学院、历史学院、哲学学院、海外教育学院、新闻传播学院', i:'📚', t:'文明的传承者',
+   io:'文史哲全域人文大类，整合文学、历史、哲学、新闻传播、汉语国际教育，传统人文与新媒体、国际中文教育交叉复合。',
+   f:'戏剧影视文学、汉语言文学、历史学、考古学、哲学、新闻学、广播电视学、广告学等方向自由分流，人文底蕴深厚。',
+   da:'在杜厦图书馆的古籍阅览室里翻到一本清代刻本，指尖轻轻划过书页上的文字；下午去新闻传播学院的演播厅体验了一把虚拟演播室录制，发现当主播比自己想象中难得多。'},
+  {n:'经济管理试验班(数智经济与管理)', d:'商学院', i:'💰', t:'数字商业的领航者',
+   io:'经管数字交叉大类，传统经济学、工商管理融合大数据、数字经济技术，覆盖金融科技、数字商务、智能会计复合方向。',
+   f:'经济学、金融学、金融工程、国际经济与贸易、工商管理、会计学、财务管理、电子商务八个方向分流，商学院通过EQUIS和AACSB双认证。',
+   da:'在商学院的案例分析室里和组员一起做企业估值pre，被教授追问财务模型中的一个假设前提，你沉着地给出了推导过程；中午在食堂边吃饭边刷A股行情。'},
+  {n:'法学(涉外法治人才实验班)', d:'法学院', i:'⚖️', t:'国际法治的践行者',
+   io:'法学交叉实验班，融合国际法、国际经贸、涉外外语课程，面向跨境商事、国际争端解决、涉外法务培养复合型法律人才。',
+   f:'2026年全新招生特色班，强化跨境纠纷解决、涉外商事合规实训，培养通晓国际经贸规则、具备跨文化沟通能力的高端涉外法治人才。',
+   da:'在逸夫管理科学楼的模拟仲裁庭上全英文辩论，对手是国际法专业的学长，双方火力全开互不相让；在北大楼前的草坪上和同学讨论WTO最新判例，阳光透过爬山虎洒在案例书上。'},
+  {n:'汉语言文学', d:'文学院', i:'✍️', t:'文字的炼金术士',
+   io:'传统中文基础专业，涵盖古代文学、现当代文学、语言学、创意写作，纯人文基础培养。',
+   f:'国家级一流本科专业，文学院可追溯到1914年，程千帆、莫砺锋等大师薪火相传，被誉为"中国文学研究的南方之强"。',
+   da:'在文学院旁听了一场关于《文选》的学术讲座，教授讲到某个注疏时引经据典，你激动地在笔记本上狂记；晚上在宿舍写了一首短诗，发给朋友看，对方回复"这写得也太好了吧"。'},
+  {n:'英语', d:'外国语学院', i:'🌍', t:'跨文化的沟通者',
+   io:'外国语言文学大类基础专业，覆盖多国语言、文学翻译、跨文化交流，外语基础通用培养。',
+   f:'英语、俄语、德语、法语、西班牙语、日语、朝鲜语等多语种培养方向，依托外国语学院深厚的人文底蕴和国际化交流平台。',
+   da:'在外国语学院的小班课上用英语做了一次关于后殖民文学的presentation，教授点评时说你的发音几乎以假乱真；下午在德语角跟外教聊德国的能源转型政策，发现自己的口语进步了不少。'},
+  {n:'德语(德语法学实验班)(双学士学位)', d:'外国语学院、法学院', i:'🌐', t:'中德之间的桥梁',
+   io:'文+法双学位项目，德语语言文学+法学复合，深耕德国民商法、中欧跨境法务，毕业授予文学、法学双学位。',
+   f:'江苏省双学士学位项目，外国语学院与法学院联合办学，贯通德语交际、欧盟商事法律、跨境经贸实务课程，对接中德产业合作法务场景。',
+   da:'在法学院的德国法课上用德语分析德国民法典的一条经典条款，教授点头说"你的理解很到位"；在中德合作项目里担任法律翻译，双方谈判僵持时你的一句精准翻译打破了僵局。'}
+];
+
+const Q = [
+  {t:'遇到感兴趣的问题，你会花大量时间查阅文献、追根溯源，哪怕这个问题跟考试无关。', m:[7,8,9,29,32,4]},
+  {t:'看到新发布的科技产品，你的第一反应是去了解它用了什么新技术、解决了什么痛点。', m:[0,1,2,3,10,22]},
+  {t:'做复杂任务前，你会先在脑子里把步骤理清楚，确保每一步都逻辑通顺了才开始动手。', m:[13,15,16,18,19,11,14]},
+  {t:'你擅长在不同类型的任务之间切换，既能独立钻研也能和他人高效协作。', m:[20,27,12,30]},
+  {t:'看到一组数据或市场现象，你会习惯性地想找规律、做预测、看趋势。', m:[17,21,6,30,7]},
+  {t:'发现制度或规则存在不合理之处，你会认真思考改进方案，而不只是抱怨几句。', m:[31,28,34]},
+  {t:'看外语电影或读外文资料时，你会留意语言背后的文化逻辑和独特的表达习惯。', m:[12,34,33,29,32]},
+  {t:'身边的人遇到困难时，你会优先放下手头的事去倾听和帮忙。', m:[25,24,26,28]},
+  {t:'讨论问题时，你常能把看起来不相关的事情联系起来，提出让人意外的新视角。', m:[2,1,22,29]},
+  {t:'你很喜欢那种"想一个问题想到入迷、完全沉浸进去"的状态。', m:[7,8,9,14,16,6,10,17]},
+  {t:'你会主动把学习或工作任务拆解成明确步骤，并设定时间节点来推进。', m:[27,21,18,3,0]},
+  {t:'做选择时，你更看重事情对社会或他人的价值，而不只是个人收益。', m:[25,24,23,5,31,11]},
+  {t:'在团队里你会不自觉地在心里把控进度和方向，提醒大家不要偏离目标。', m:[27,20,30,28]},
+  {t:'你对生命现象——无论是人体运作还是生态系统——有发自内心的好奇。', m:[4,5,23,26,25]},
+  {t:'遇到陌生问题时，你的本能反应是把它拆成几个小问题，再逐一分析。', m:[15,16,18,19,13,6]},
+  {t:'你希望未来的工作能接触不同文化背景的人和事，而不是只局限在单一环境里。', m:[34,33,12,31,30,29]}
+];
+
+const L = [{v:1,l:'完全不符合',n:'①'},{v:2,l:'不符合',n:'②'},{v:3,l:'中立',n:'③'},{v:4,l:'符合',n:'④'},{v:5,l:'完全符合',n:'⑤'}];
+let cur=0, ans=[];
+const A=document.getElementById('dynamicArea'),F=document.getElementById('progressFill'),Lb=document.getElementById('progressLabel');
+
+function q() {
+  if(cur>=Q.length){r();return;}
+  const qc=Q[cur];
+  A.innerHTML=`<div class="slide"><div class="q-number">第 ${cur+1}/${Q.length} 题</div><div class="q-statement">${qc.t}</div><div class="likert">${L.map(l=>`<div class="likert-opt${ans[cur]===l.v?' selected':''}" data-v="${l.v}" onclick="p(this,${l.v})" onmousemove="m(this,event)"><span class="num">${l.n}</span><span class="lbl">${l.l}</span></div>`).join('')}</div><div class="actions"><button class="btn btn-ghost" onclick="b()" ${cur===0?'disabled':''}>← 上一题</button><button class="btn btn-primary" id="nx" onclick="n()" ${ans[cur]===undefined?'disabled':''}>下一题 →</button></div></div>`;
+  u();
+}
+function m(el,e){el.style.setProperty('--mx',(e.offsetX/el.offsetWidth*100)+'%');el.style.setProperty('--my',(e.offsetY/el.offsetHeight*100)+'%');}
+function p(el,v){
+  ans[cur]=v;
+  document.querySelectorAll('.likert-opt').forEach(o=>o.classList.toggle('selected',parseInt(o.dataset.v)===v));
+  // ripple
+  const r=document.createElement('span');
+  r.style.cssText='position:absolute;border-radius:50%;background:rgba(206,147,216,0.4);width:20px;height:20px;left:'+(el.offsetWidth/2-10)+'px;top:'+(el.offsetHeight/2-10)+'px;transform:scale(0);animation:rippleBurst 0.5s ease-out forwards;pointer-events:none;';
+  el.appendChild(r);
+  setTimeout(()=>r.remove(),600);
+  // burst particles
+  for(let i=0;i<6;i++){
+    const p=document.createElement('span');
+    const a=Math.random()*360*Math.PI/180,d=30+Math.random()*40;
+    p.style.cssText=`position:absolute;width:${3+Math.random()*4}px;height:${3+Math.random()*4}px;border-radius:50%;background:${['#ce93d8','#e1bee7','#7c4dff','#fff'][Math.floor(Math.random()*4)]};left:${el.offsetWidth/2-2}px;top:${el.offsetHeight/2-2}px;pointer-events:none;animation:particleFly 0.5s ease-out forwards;--px:${Math.cos(a)*d}px;--py:${Math.sin(a)*d}px;`;
+    el.appendChild(p);
+    setTimeout(()=>p.remove(),550);
+  }
+  document.getElementById('nx').disabled=false;
+  if(cur<Q.length-1) setTimeout(n,400);
+  else setTimeout(n,300);
+}
+function n(){if(ans[cur]===undefined)return;cur++;if(cur>=Q.length)r();else q();}
+function b(){if(cur===0)return;cur--;q();}
+function u(){F.style.width=(cur/Q.length*100)+'%';Lb.textContent=cur+'/'+Q.length;}
+
+function r(){
+  let sc=new Array(M.length).fill(0),qc=new Array(M.length).fill(0);
+  for(let i=0;i<Q.length;i++){
+    const ra=ans[i];if(ra===undefined)continue;
+    Q[i].m.forEach(idx=>{sc[idx]+=ra;qc[idx]++;});
+  }
+  let bi=0,bs=-1;
+  for(let i=0;i<M.length;i++){const a=qc[i]>0?sc[i]/qc[i]:0;if(a>bs){bs=a;bi=i;}}
+  const m=M[bi];
+  A.className='result-area';
+  A.innerHTML=`<div class="result-icon">${m.i}</div><div class="result-title">${m.t}</div><div class="result-sub">✦ NJUti 为你匹配</div><div class="result-major-box"><div class="major">${m.n}</div><div class="dept">${m.d}</div></div><div class="result-section"><div class="s-label">📖 专业简介</div><div class="s-text">${m.io}</div></div><div class="result-section"><div class="s-label">⭐ 招生特色</div><div class="s-text">${m.f}</div></div><a class="full-link" href="https://bkzs.nju.edu.cn/zsw/zydd.html" target="_blank">📋 查看南京大学招生详情 →</a><div class="result-daily"><div class="label">🎒 你的南大日常</div><div class="text">${m.da}</div></div><div class="result-actions"><button class="btn btn-primary" onclick="s(${bi})">📤 分享结果</button><button class="btn btn-ghost" onclick="rst()">🔄 重新测试</button></div>`;
+  F.style.width='100%';Lb.textContent=Q.length+'/'+Q.length+' ✓';
+}
+function s(i){const m=M[i];const t='🎓【NJUti】最适合我的南大专业是「'+m.n+'」— '+m.t+'！\n快来测测你与南大哪个专业最匹配 👉';if(navigator.share)navigator.share({title:'NJUti',text:t});else navigator.clipboard.writeText(t).then(()=>alert('结果已复制，快去分享给小伙伴吧！'));}
+function rst(){cur=0;ans=[];A.className='';q();}
+(function(){const c=document.getElementById('stars');for(let i=0;i<80;i++){const s=document.createElement('div');s.className='star';s.style.left=Math.random()*100+'%';s.style.top=Math.random()*100+'%';s.style.setProperty('--dur',(2+Math.random()*4)+'s');s.style.animationDelay=Math.random()*4+'s';s.style.width=s.style.height=(1+Math.random()*2)+'px';c.appendChild(s);}})();
+q();
+</script>
+</body>
+</html>
