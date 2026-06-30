@@ -204,6 +204,17 @@
   .result-link { color:rgba(255,255,255,0.2); font-size:12px; margin:6px 0 18px; letter-spacing:0.5px; }
   .result-link a { color:rgba(206,147,216,0.5); text-decoration:none; }
   .result-link a:hover { color:#ce93d8; }
+  .friend-links { display:flex; flex-direction:column; gap:8px; margin-top:28px; padding-top:20px; border-top:1px solid rgba(255,255,255,0.06); }
+  .friend-link {
+    display:flex; align-items:center; gap:12px; background:rgba(255,255,255,0.04); border:1px solid rgba(255,255,255,0.07);
+    border-radius:14px; padding:12px 16px; text-decoration:none; transition:all 0.25s; text-align:left;
+  }
+  .friend-link:hover { background:rgba(255,255,255,0.08); border-color:rgba(206,147,216,0.25); transform:translateY(-1px); }
+  .friend-link .fl-icon { width:36px; height:36px; border-radius:10px; display:flex; align-items:center; justify-content:center; font-size:18px; flex-shrink:0; }
+  .friend-link .fl-info { min-width:0; }
+  .friend-link .fl-title { color:rgba(255,255,255,0.7); font-size:13px; font-weight:600; }
+  .friend-link .fl-desc { color:rgba(255,255,255,0.3); font-size:11px; margin-top:2px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+  .friend-links-label { color:rgba(255,255,255,0.15); font-size:11px; letter-spacing:1px; margin-bottom:4px; }
 </style>
 </head>
 <body>
@@ -491,6 +502,21 @@ function showStart(){
     <input class="name-input" id="ni" type="text" placeholder="请输入你的姓名" value="${userName}" maxlength="20" oninput="userName=this.value">
     <div style="color:rgba(255,255,255,0.2);font-size:12px;margin:-16px 0 24px;">网站不会保存你的信息，请放心填写</div>
     <div><button class="btn btn-primary" onclick="startQuiz()">开始测试 →</button></div>
+    <div class="friend-links">
+      <div class="friend-links-label">友 情 链 接</div>
+      <a class="friend-link" href="https://github.com/ButterJack07/MemoryHelper" target="_blank">
+        <div class="fl-icon" style="background:rgba(33,150,243,0.15);color:#64b5f6;">🧠</div>
+        <div class="fl-info"><div class="fl-title">MemoryHelper</div><div class="fl-desc">基于Markdown提纲的AI背诵助手</div></div>
+      </a>
+      <a class="friend-link" href="https://app.exnju.top/" target="_blank">
+        <div class="fl-icon" style="background:rgba(206,147,216,0.15);color:#ce93d8;">📚</div>
+        <div class="fl-info"><div class="fl-title">十二问</div><div class="fl-desc">一个Agent辅助学习、复习的平台</div></div>
+      </a>
+      <a class="friend-link" href="https://bkzs.nju.edu.cn/" target="_blank">
+        <div class="fl-icon" style="background:rgba(76,175,80,0.15);color:#81c784;">🏛️</div>
+        <div class="fl-info"><div class="fl-title">南京大学本科招生</div><div class="fl-desc">bkzs.nju.edu.cn — 官方招生信息</div></div>
+      </a>
+    </div>
   </div>`;
   F.style.width='0%';Lb.textContent='0/15';
 }
