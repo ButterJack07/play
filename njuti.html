@@ -457,6 +457,59 @@ function b(){if(cur===0)return;cur--;showQuestion();}
 function u(){F.style.width=(cur/totalQ*100)+'%';Lb.textContent=Math.min(cur+1,totalQ)+'/'+totalQ;}
 
 function r(){
+  const allVals=Object.values(ans).filter(v=>v!==undefined);
+  const allSame=allVals.length===15&&allVals.every(v=>v===allVals[0]);
+  const setRes=h=>{A.className='result-area';A.innerHTML=h;F.style.width='100%';Lb.textContent='15/15 ✓';};
+
+  if(allSame&&allVals[0]===1){
+    setRes(`<div style="text-align:center;animation:fadeSlideIn 0.6s ease forwards">
+      <div style="font-size:56px;margin-bottom:8px;">😅</div>
+      <div style="color:#fff;font-size:22px;font-weight:800;margin-bottom:6px;">经过严谨（并不）的三维评估</div>
+      <div style="color:rgba(255,255,255,0.5);font-size:14px;margin-bottom:20px;">我们发现你的气质与南京大学不太匹配……<br>不过别灰心，南京还有另一所985：</div>
+      <div class="result-card" style="background:linear-gradient(135deg,rgba(30,100,200,0.2),rgba(0,50,150,0.15));border-color:rgba(30,100,200,0.3)">
+        <div style="font-size:44px;margin-bottom:6px;">🏫</div>
+        <div style="color:#fff;font-size:24px;font-weight:800;">东南大学</div>
+        <div style="color:rgba(255,255,255,0.4);font-size:14px;margin-top:4px;">Southeast University · 四牌楼影视基地</div>
+      </div>
+      <div class="result-section"><div class="s-label">🏛️ 学校简介</div><div class="s-text">南大在鼓楼，东大在四牌楼——隔了一条街，却是两种画风。东大以建筑、土木、电子信息名扬天下，校园里的大礼堂和涌泉池常年承包各种电视剧取景。九龙湖校区则以其辽阔（和妖风）著称，人称"九龙湖高级技工学校"。</div></div>
+      <div class="result-section"><div class="s-label">🤝 与南大的关系</div><div class="s-text">曾经的国立中央大学嫡系兄弟，如今各闯一片天。两校学生常在考研季互相串门，在虎踞关小吃街狭路相逢。如果你去了东大，记得常来南大找我玩——地铁就几站路，我请你吃食堂。</div></div>
+      <div class="result-actions"><button class="btn btn-primary" onclick="rst()">🔄 重新测试</button><button class="btn btn-ghost" onclick="s_easter('东南大学')">📤 分享</button></div>
+    </div>`);
+    return;
+  }
+  if(allSame&&allVals[0]===3){
+    setRes(`<div style="text-align:center;animation:fadeSlideIn 0.6s ease forwards">
+      <div style="font-size:56px;margin-bottom:8px;">☯️</div>
+      <div style="color:#fff;font-size:22px;font-weight:800;margin-bottom:6px;">中庸之道，天人合一</div>
+      <div style="color:rgba(255,255,255,0.5);font-size:14px;margin-bottom:20px;">所有选项都选3——你的内心毫无波澜，堪称当代苏格拉底。</div>
+      <div class="result-card" style="background:linear-gradient(135deg,rgba(206,147,216,0.15),rgba(255,193,7,0.15));border-color:rgba(255,193,7,0.25)">
+        <div style="font-size:44px;margin-bottom:6px;">🏛️</div>
+        <div style="color:#fff;font-size:24px;font-weight:800;">国立中央大学</div>
+        <div style="color:rgba(255,255,255,0.4);font-size:14px;margin-top:4px;">National Central University · 1928-1949</div>
+      </div>
+      <div class="result-section"><div class="s-label">📜 历史溯源</div><div class="s-text">国立中央大学，民国时期中国最高学府，亚洲排名数一数二。1949年改组后，其在宁院系演变为今天的南京大学、东南大学、南京师范大学等一众高校。所以从某种意义上说，你的"中立"选择让你成为了国立中央大学的唯一传人。可惜这所学校已经不在了……</div></div>
+      <div class="result-section"><div class="s-label">😂 友情建议</div><div class="s-text">既然国立中央大学已成历史，不妨考虑一下它的继承者之一——南京大学。虽然我们现在的排名没当年那么夸张了，但鼓楼校区的北大楼还是很好看的，仙林校区的杜厦图书馆也能让你安放那颗不偏不倚的灵魂。</div></div>
+      <div class="result-actions"><button class="btn btn-primary" onclick="rst()">🔄 重新测试</button><button class="btn btn-ghost" onclick="s_easter('国立中央大学')">📤 分享</button></div>
+    </div>`);
+    return;
+  }
+  if(allSame&&allVals[0]===5){
+    setRes(`<div style="text-align:center;animation:fadeSlideIn 0.6s ease forwards">
+      <div style="font-size:56px;margin-bottom:8px;">🌟</div>
+      <div style="color:#fff;font-size:22px;font-weight:800;margin-bottom:6px;">恭喜！六边形战士！</div>
+      <div style="color:rgba(255,255,255,0.5);font-size:14px;margin-bottom:20px;">你对所有问题都充满自信——你就是南大要找的那个人。</div>
+      <div class="result-card" style="background:linear-gradient(135deg,rgba(206,147,216,0.25),rgba(124,77,255,0.25));border-color:#ce93d8">
+        <div style="font-size:44px;margin-bottom:6px;">🎉</div>
+        <div style="color:#fff;font-size:24px;font-weight:800;">南京大学 · 全专业通吃</div>
+        <div style="color:rgba(255,255,255,0.4);font-size:14px;margin-top:4px;">专业随便报！什么专业都适合你</div>
+      </div>
+      <div class="result-section"><div class="s-label">💪 评估结论</div><div class="s-text">人文素养你拉满，科学精神你拉满，抽象思维你拉满，动手实践你拉满，学术研究你拉满，就业信心你拉满——你就是传说中的六边形南大人。无论你走进哪个专业的课堂，教授都会觉得你天赋异禀；无论你参加什么社团，社长都会把你当骨干培养。</div></div>
+      <div class="result-section"><div class="s-label">🎯 温馨提醒</div><div class="s-text">不过话说回来，什么都拉满其实等于什么都没测出来（笑）。建议你回头认真做一遍，毕竟选专业是人生大事——当然，如果你真的每个方面都这么强，南京大学确实每个专业都欢迎你。</div></div>
+      <div class="result-actions"><button class="btn btn-primary" onclick="rst()">🔄 重新测试</button><button class="btn btn-ghost" onclick="s_easter('南京大学')">📤 分享</button></div>
+    </div>`);
+    return;
+  }
+
   const code=getType();
   const mi=getBestMajor();
   const mm=mi!==null?M[mi]:null;
@@ -494,6 +547,11 @@ function s(code){
   const mn=mi!==null?M[mi].n:'南大专业';
   const u='https://butterjack07.github.io/play/njuti.html';
   const tx='🎓【NJUti】我的类型是「'+code+'」— 最适合的专业是「'+mn+'」！\n15道题·三维评估，测测你的南大专业匹配 👉 '+u;
+  if(navigator.share)navigator.share({title:'NJUti',text:tx});else navigator.clipboard.writeText(tx).then(()=>alert('结果已复制，快去分享给小伙伴吧！'));
+}
+function s_easter(school){
+  const u='https://butterjack07.github.io/play/njuti.html';
+  const tx='🎓【NJUti】测完了！推荐我去「'+school+'」… 你也来试试？'+u;
   if(navigator.share)navigator.share({title:'NJUti',text:tx});else navigator.clipboard.writeText(tx).then(()=>alert('结果已复制，快去分享给小伙伴吧！'));
 }
 function rst(){cur=0;ans=[];extraQ=[];totalQ=15;A.className='';showQuestion();}
