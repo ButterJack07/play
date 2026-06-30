@@ -190,6 +190,17 @@
   .mini-card:hover { transform:translateY(-3px); box-shadow:0 6px 20px rgba(212,167,74,0.2); }
   .mini-card .icon { font-size:22px; margin-bottom:2px; }
   .mini-card .name { color:#3a2a1a; font-size:11px; font-weight:700; line-height:1.3; }
+  .start-screen { text-align:center; animation:fadeSlideIn 0.6s ease forwards; }
+  .start-screen .ico { font-size:64px; margin-bottom:10px; }
+  .start-screen h2 { color:#fff; font-size:24px; font-weight:800; margin-bottom:6px; }
+  .start-screen p { color:rgba(255,255,255,0.5); font-size:14px; margin-bottom:28px; }
+  .name-input {
+    background:rgba(255,255,255,0.06); border:1.5px solid rgba(255,255,255,0.12); border-radius:14px;
+    padding:12px 18px; width:100%; max-width:260px; color:#fff; font-size:16px; font-weight:600;
+    text-align:center; outline:none; transition:0.25s; margin-bottom:24px;
+  }
+  .name-input:focus { border-color:#ce93d8; box-shadow:0 0 20px rgba(206,147,216,0.15); }
+  .name-input::placeholder { color:rgba(255,255,255,0.2); font-weight:400; }
 </style>
 </head>
 <body>
@@ -426,7 +437,7 @@ const TYPES = {
 };
 
 const L = [{v:1,l:'完全不符合',n:'①'},{v:2,l:'不符合',n:'②'},{v:3,l:'中立',n:'③'},{v:4,l:'符合',n:'④'},{v:5,l:'完全符合',n:'⑤'}];
-let cur=0, ans=[], extraQ=[], totalQ=15;
+let cur=0, ans=[], extraQ=[], totalQ=15, userName='';
 const A=document.getElementById('dynamicArea'),F=document.getElementById('progressFill'),Lb=document.getElementById('progressLabel');
 
 function dimAvg(di, pi){
@@ -467,6 +478,22 @@ function getBestMajor(){
     Object.entries(extraQ[ei].map).forEach(([mi,w])=>scores[parseInt(mi)]+=(w[av-1]||0));
   }
   return t.m.reduce((best,mi)=>scores[mi]>(scores[best]||-1)?mi:best,t.m[0]);
+}
+function showStart(){
+  A.className='';
+  A.innerHTML=`<div class="start-screen">
+    <div class="ico">🎓</div>
+    <h2>欢迎来到 NJUti</h2>
+    <p>15道题 · 找到和你最有缘分的南大专业</p>
+    <input class="name-input" id="ni" type="text" placeholder="请输入你的姓名" value="${userName}" maxlength="20" oninput="userName=this.value">
+    <div style="color:rgba(255,255,255,0.2);font-size:12px;margin:-16px 0 24px;">网站不会保存你的信息，请放心填写</div>
+    <div><button class="btn btn-primary" onclick="startQuiz()">开始测试 →</button></div>
+  </div>`;
+  F.style.width='0%';Lb.textContent='0/15';
+}
+function startQuiz(){
+  userName=(document.getElementById('ni')||{}).value||userName;
+  showQuestion();
 }
 function showQuestion(){
   if(cur>=totalQ){r();return;}
@@ -522,7 +549,7 @@ function r(){
         <div class="al-school" style="color:#0d3b7a">东南大学</div>
         <div class="al-school-en" style="color:#1a5bb5">SOUTHEAST UNIVERSITY</div>
         <div class="al-line" style="background:linear-gradient(90deg,transparent,#1a5bb5,transparent)"></div>
-        <div class="al-greeting">同学：</div>
+        <div class="al-greeting">${userName||'同学'}：</div>
         <div class="al-body">经审核，你被我校</div>
         <div class="al-major" style="color:#0d3b7a">四牌楼影视基地 · 九龙湖高级技工学校</div>
         <div class="al-body">录取。<br>请于2026年9月来校报到——地铁就几站路，记得常来南大找我玩。</div>
@@ -543,7 +570,7 @@ function r(){
         <div class="al-school" style="color:#5a3e00">国立中央大学</div>
         <div class="al-school-en" style="color:#8b6914">NATIONAL CENTRAL UNIVERSITY</div>
         <div class="al-line" style="background:linear-gradient(90deg,transparent,#b8860b,transparent)"></div>
-        <div class="al-greeting">同学：</div>
+        <div class="al-greeting">${userName||'同学'}：</div>
         <div class="al-body">经审核，你被我校</div>
         <div class="al-major" style="color:#5a3e00">不偏不倚学院 · 中庸之道专业</div>
         <div class="al-body">录取。<br>温馨提示：国立中央大学已于1949年改组，目前仅存在于历史书中。建议你考虑其继承者——南京大学。</div>
@@ -565,7 +592,7 @@ function r(){
         <div class="al-school">南京大学</div>
         <div class="al-school-en" style="color:#9c27b0">NANJING UNIVERSITY</div>
         <div class="al-line" style="background:linear-gradient(90deg,transparent,#9c27b0,transparent)"></div>
-        <div class="al-greeting">同学：</div>
+        <div class="al-greeting">${userName||'同学'}：</div>
         <div class="al-body">经审核，你被南京大学以下全部专业录取：</div>
       </div>
       <div class="mini-grid">${allMajors}</div>
@@ -598,7 +625,7 @@ function r(){
       <div class="al-school">南京大学</div>
       <div class="al-school-en">NANJING UNIVERSITY</div>
       <div class="al-line"></div>
-      <div class="al-greeting">同学：</div>
+      <div class="al-greeting">${userName||'同学'}：</div>
       <div class="al-body">经审核，你被我校</div>
       <div class="al-major">${mm.n}</div>
       <div class="al-body">录取。<br>请于2026年9月来校报到，开启你的南大时光。</div>
@@ -627,9 +654,9 @@ function s_easter(school){
   const tx='🎓【NJUti】测完了！推荐我去「'+school+'」… 你也来试试？'+u;
   if(navigator.share)navigator.share({title:'NJUti',text:tx});else navigator.clipboard.writeText(tx).then(()=>alert('结果已复制，快去分享给小伙伴吧！'));
 }
-function rst(){cur=0;ans=[];extraQ=[];totalQ=15;A.className='';showQuestion();}
+function rst(){cur=0;ans=[];extraQ=[];totalQ=15;A.className='';showStart();}
 (function(){const c=document.getElementById('stars');for(let i=0;i<80;i++){const s=document.createElement('div');s.className='star';s.style.left=Math.random()*100+'%';s.style.top=Math.random()*100+'%';s.style.setProperty('--dur',(2+Math.random()*4)+'s');s.style.animationDelay=Math.random()*4+'s';s.style.width=s.style.height=(1+Math.random()*2)+'px';c.appendChild(s);}})();
-showQuestion();
+showStart();
 </script>
 </body>
 </html>
