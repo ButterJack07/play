@@ -119,12 +119,23 @@
   .btn-ghost { background: rgba(255,255,255,0.06); color: rgba(255,255,255,0.5); border: 1px solid rgba(255,255,255,0.08); }
   .btn-ghost:hover { background: rgba(255,255,255,0.10); color: #fff; }
   .result-area { text-align: center; animation: fadeSlideIn 0.6s ease forwards; }
-  .result-icon { font-size: 52px; margin-bottom: 8px; line-height: 1.2; }
-  .result-title { color: #fff; font-size: 24px; font-weight: 800; margin-bottom: 2px; }
-  .result-sub { color: rgba(255,255,255,0.4); font-size: 14px; margin-bottom: 20px; }
-  .result-major-box { background: linear-gradient(135deg, rgba(206,147,216,0.12), rgba(124,77,255,0.12)); border: 1.5px solid rgba(206,147,216,0.2); border-radius: 16px; padding: 18px 24px; margin-bottom: 20px; }
-  .result-major-box .major { color: #fff; font-size: 20px; font-weight: 800; }
-  .result-major-box .dept { color: rgba(255,255,255,0.4); font-size: 13px; margin-top: 4px; }
+  .result-sub { color: rgba(255,255,255,0.4); font-size: 14px; margin-bottom: 16px; }
+  .type-block { margin-bottom: 24px; }
+  .type-code { display: flex; justify-content: center; gap: 10px; margin-bottom: 12px; }
+  .type-letter { display: inline-flex; align-items: center; justify-content: center; width: 56px; height: 56px; border-radius: 14px; font-size: 24px; font-weight: 900; letter-spacing: 0; }
+  .type-letter.d0 { background: rgba(206,147,216,0.2); border: 1.5px solid rgba(206,147,216,0.3); color: #e1bee7; }
+  .type-letter.d1 { background: rgba(124,77,255,0.2); border: 1.5px solid rgba(124,77,255,0.3); color: #b39ddb; }
+  .type-letter.d2 { background: rgba(0,200,200,0.15); border: 1.5px solid rgba(0,200,200,0.25); color: #80cbc4; }
+  .type-dim-labels { display: flex; justify-content: center; gap: 12px; flex-wrap: wrap; margin-bottom: 6px; }
+  .type-dim-labels .dl { font-size: 12px; color: rgba(255,255,255,0.35); letter-spacing: 0.5px; }
+  .result-card {
+    background: linear-gradient(135deg, rgba(206,147,216,0.18), rgba(124,77,255,0.18));
+    border: 1.5px solid rgba(206,147,216,0.3); border-radius: 20px; padding: 24px 28px; margin-bottom: 20px;
+    box-shadow: 0 0 40px rgba(124,77,255,0.12);
+  }
+  .result-card .icon { font-size: 44px; margin-bottom: 6px; }
+  .result-card .name { color: #fff; font-size: 24px; font-weight: 800; }
+  .result-card .dept { color: rgba(255,255,255,0.4); font-size: 14px; margin-top: 4px; }
   .result-section { text-align: left; margin-bottom: 16px; background: rgba(255,255,255,0.03); border-radius: 12px; padding: 16px 18px; }
   .result-section .s-label { color: rgba(255,255,255,0.3); font-size: 11px; font-weight: 700; letter-spacing: 1px; margin-bottom: 8px; text-transform: uppercase; }
   .result-section .s-text { color: rgba(255,255,255,0.7); font-size: 14px; line-height: 1.8; }
@@ -148,17 +159,23 @@
     <div class="header">
       <div class="badge">✦ NJUti 2026</div>
       <h1><span>NJU</span>ti</h1>
-      <p>16道选择题 · 找到与你最匹配的南大专业</p>
+      <p>15道题 · 找到和你最有缘分的南大专业</p>
     </div>
     <div class="progress-wrap">
       <div class="progress-bar"><div class="fill" id="progressFill"></div></div>
-      <span class="progress-label" id="progressLabel">0/16</span>
+      <span class="progress-label" id="progressLabel">0/15</span>
     </div>
     <div id="dynamicArea"></div>
     <div class="footer">南京大学 NJUti · 纯属娱乐 · 博君一笑</div>
   </div>
 </div>
 <script>
+const DIM = [
+  {lb:'人文', op:'科学', cd:'H', oc:'S', ic:'📖'},
+  {lb:'抽象', op:'实践', cd:'A', oc:'P', ic:'🧠'},
+  {lb:'研究', op:'就业', cd:'R', oc:'J', ic:'🔬'}
+];
+
 const M = [
   {n:'工科试验班', d:'现代工程与应用科学学院、能源与资源学院、生物医学工程学院、工程管理学院', i:'🔧', t:'宽口径工科探索者',
    io:'本部传统工科宽口径大类，大一统一工科基础平台课，覆盖光电、材料、新能源、碳中和、生物医学、工业管理多领域理工交叉，入校后依据分流规则自主选择上述工科专业。',
@@ -216,18 +233,10 @@ const M = [
    io:'普通人工智能专业，覆盖机器学习、计算机视觉、自然语言处理、类脑智能，数学、计算机深度交叉，面向通用AI工程研发。',
    f:'依托机器学习与数据挖掘国家级平台，课程涵盖AI全栈技术，与华为、字节跳动等头部企业建立联合实验室，实习与就业资源丰富。',
    da:'在人工智能学院的实验室里训练图像分类模型，调了一下午超参数终于把准确率提了2个点；和周志华教授课上讲的内容一结合，顿时理解了梯度背后的数学直觉。'},
-  {n:'人工智能(至诚班)', d:'人工智能学院', i:'🧠', t:'智能边疆的开拓者',
-   io:'至诚本研贯通拔尖班，人工智能+数学+集成电路跨学科融合，对接国家级AI实验室，本硕博连贯培养战略人工智能科研人才。',
-   f:'周志华、谭铁牛院士领衔师资，执行"3+1+X"本研贯通体系，校企双导师协同，对接华为、中国移动等头部企业实训资源。',
-   da:'和导师讨论强化学习在机器人控制中的应用，发现自己的推导中有个关键假设不成立；在华为的AI实训平台上跑完一个大模型推理任务，看着结果长舒一口气。'},
   {n:'计算机科学与技术', d:'计算机学院', i:'💻', t:'数字世界的建筑师',
    io:'计算机核心基础专业，覆盖系统架构、算法、高性能计算、网络安全，数学与计算机理论、软件工程交叉。',
    f:'依托连续三轮全国学科评估第一的计算机软件新技术国家重点实验室，课程体系涵盖从理论到系统的全栈计算机科学。',
    da:'在计算机系楼的机房里调试分布式系统的大作业，debug到凌晨终于跑通了第一个完整用例；和同学在走廊的黑板前争论一个算法的时间复杂度，谁也说服不了谁。'},
-  {n:'计算机科学与技术(至诚班)', d:'计算机学院', i:'⚡', t:'系统底层的征服者',
-   io:'至诚本研贯通专项，聚焦底层系统、可信计算、高性能计算，本科阶段同步参与国家级计算机科研项目，直通研究生阶段。',
-   f:'吕建院士牵头，背靠国家重点实验室，独享至诚计划本研贯通通道，优先分配国家级科研课题和头部企业实习名额。',
-   da:'在吕建院士的实验室里攻关并行计算中的任务调度问题，读论文读到一半突然有了新思路；深夜走出计算机系楼，仙林校区的路灯把影子拉得很长，心情却很畅快。'},
   {n:'计算机科学与技术(计算机金融实验班)(双学士学位)', d:'计算机学院、工程管理学院', i:'📈', t:'科技金融的双栖者',
    io:'江苏省首个计算机金融复合双学位项目，计算机技术+金融学融合，主攻金融科技、量化交易、风控建模，毕业授予工学、经济学双学位。',
    f:'计算机学院与工程管理学院联合培养，行业真实金融项目实战教学，超六成毕业生进入海内外顶尖院校金融科技方向深造。',
@@ -236,10 +245,6 @@ const M = [
    io:'国家级特色化示范性软件学院常规方向，侧重AI软件、大数据、云计算、工业软件开发，计算机与智能技术交叉。',
    f:'软件工程国家级一流本科专业，课程覆盖AI软件、大数据、云计算、工业软件等前沿方向，产教深度融合，就业竞争力突出。',
    da:'在软件学院的智慧教室里和队友一起做云原生应用开发，前后端联调成功时击掌庆祝；在GitHub上开源了一个小工具，收到第一个star时开心了整整一天。'},
-  {n:'软件工程(至诚班)', d:'软件学院', i:'🔒', t:'基础软件的脊梁',
-   io:'至诚本研贯通高端软件专项，聚焦关键基础软件、工业软件、网络安全，全程参与国家级软件攻关项目，本研连贯培养。',
-   f:'依托教育部特色化示范性软件学院，院士与行业总工程师联合指导，配套全流程软件研发实训平台，攻坚基础软件"卡脖子"难题。',
-   da:'在软件实训平台上从需求分析一路干到系统部署，code review被总工批了三轮才终于通过；参与国产数据库内核开发，发现并修复了一个隐藏很深的内存泄漏。'},
   {n:'软件工程(软工商业创新班)(双学士学位)', d:'软件学院、商学院', i:'🏢', t:'数字转型的操盘手',
    io:'工+管双学位项目，软件工程+工商管理融合，培养互联网产品经理、产业数字化技术管理复合型人才，授予工学、管理学双学位。',
    f:'软件学院与商学院强强联合，聚焦零售、智能制造、服务业数字化转型，兼顾代码开发、项目统筹与商业市场分析能力。',
@@ -256,10 +261,6 @@ const M = [
    io:'环境与公共卫生交叉实验班，融合环境治理、毒理学、预防医学，聚焦环境污染与人体健康风险评估复合领域。',
    f:'环境工程、环境科学两个国家级一流本科专业方向，依托环境学院的国家级科研平台，聚焦环境与健康的交叉前沿领域。',
    da:'在环境学院实验室里分析水样中的重金属含量，数据结果显示治理后的浓度显著低于国标；下午在仙林校区采集大气颗粒物样本，和同学讨论PM2.5对人体健康的长期影响。'},
-  {n:'临床医学(5+3一体化)', d:'医学院', i:'🏥', t:'临床一线的实干家',
-   io:'医本硕贯通项目，5年本科临床医学+3年住院医师规范化培训，临床、病理、影像医学内部交叉，毕业同步取得执业医师规培证书。',
-   f:'依托鼓楼医院、仙林附属医院等多家三甲临床平台，临床教学资源丰富，毕业后同步取得执业医师资格证与规培证。',
-   da:'在鼓楼医院跟着主治医师查房，学习如何通过听诊判断心脏杂音的性质；下午在病理科看切片，老师指着镜下的一片区域说"这就是典型的肿瘤细胞形态"。'},
   {n:'临床医学(卓越医师班)', d:'医学院', i:'❤️', t:'生命的守护神',
    io:'医学拔尖复合班，医工、医理深度交叉，本硕博贯通培养，融合基础医学、临床医学、生物医学工程，兼顾临床诊疗与医学科研。',
    f:'设置八年制本博贯通、5+3一体化两条路径，动态选拔直博，实行基础、临床、科研一体化训练，毕业可取得医学博士或硕士+规培双证。',
@@ -279,7 +280,7 @@ const M = [
   {n:'人文科学试验班', d:'文学院、历史学院、哲学学院、海外教育学院、新闻传播学院', i:'📚', t:'文明的传承者',
    io:'文史哲全域人文大类，整合文学、历史、哲学、新闻传播、汉语国际教育，传统人文与新媒体、国际中文教育交叉复合。',
    f:'戏剧影视文学、汉语言文学、历史学、考古学、哲学、新闻学、广播电视学、广告学等方向自由分流，人文底蕴深厚。',
-   da:'在杜厦图书馆的古籍阅览室里翻到一本清代刻本，指尖轻轻划过书页上的文字；下午去新闻传播学院的演播厅体验了一把虚拟演播室录制，发现当主播比自己想象中难得多。'},
+   da:'在杜厦图书馆的古籍阅览室里翻到一册清代刻本，指尖轻轻划过书页上的文字；下午去新闻传播学院的演播厅体验了一把虚拟演播室录制，发现当主播比自己想象中难得多。'},
   {n:'经济管理试验班(数智经济与管理)', d:'商学院', i:'💰', t:'数字商业的领航者',
    io:'经管数字交叉大类，传统经济学、工商管理融合大数据、数字经济技术，覆盖金融科技、数字商务、智能会计复合方向。',
    f:'经济学、金融学、金融工程、国际经济与贸易、工商管理、会计学、财务管理、电子商务八个方向分流，商学院通过EQUIS和AACSB双认证。',
@@ -299,80 +300,199 @@ const M = [
   {n:'德语(德语法学实验班)(双学士学位)', d:'外国语学院、法学院', i:'🌐', t:'中德之间的桥梁',
    io:'文+法双学位项目，德语语言文学+法学复合，深耕德国民商法、中欧跨境法务，毕业授予文学、法学双学位。',
    f:'江苏省双学士学位项目，外国语学院与法学院联合办学，贯通德语交际、欧盟商事法律、跨境经贸实务课程，对接中德产业合作法务场景。',
-   da:'在法学院的德国法课上用德语分析德国民法典的一条经典条款，教授点头说"你的理解很到位"；在中德合作项目里担任法律翻译，双方谈判僵持时你的一句精准翻译打破了僵局。'}
+   da:'在法学院的德国法课上用德语分析德国民法典的一条经典条款，教授点头说"你的理解很到位"；在中德合作项目里担任法律翻译，双方谈判僵持时你的一句精准翻译打破了僵局。'},
+  {n:'数字经济', d:'数字经济与管理学院（苏州校区）', i:'💹', t:'数字经济的拓荒者',
+   io:'苏州校区新设交叉专业，融合经济学、数据科学、区块链技术，面向数字产业化与产业数字化双向赛道。',
+   f:'数字经济与管理学院核心专业，依托苏州长三角数字经济产业集群，校企联合培养模式。',
+   da:'在苏州校区的数字经济实验室里用Python爬取电商平台数据做产业分析；下午和同学去产业园调研一家数字工厂的转型案例，发现理论和现实的差距比想象中大。'},
+  {n:'戏剧影视文学', d:'文学院', i:'🎭', t:'光影世界的造梦人',
+   io:'文学院戏剧影视艺术方向，涵盖戏剧创作、影视编剧、新媒体内容生产，文学与影像交叉培养。',
+   f:'文学院新设专业方向，延续南大深厚人文传统，兼顾剧本写作、影视批评与新媒体内容创作实践。',
+   da:'在文学院的影视工作坊里和同学一起打磨剧本，讨论人物弧光到面红耳赤；下午去先锋书店看了一场独立电影放映，回来的路上满脑子都是镜头语言。'}
 ];
 
-const Q = [
-  {t:'遇到感兴趣的问题，你会花大量时间查阅文献、追根溯源，哪怕这个问题跟考试无关。', m:[7,8,9,29,32,4]},
-  {t:'看到新发布的科技产品，你的第一反应是去了解它用了什么新技术、解决了什么痛点。', m:[0,1,2,3,10,22]},
-  {t:'做复杂任务前，你会先在脑子里把步骤理清楚，确保每一步都逻辑通顺了才开始动手。', m:[13,15,16,18,19,11,14]},
-  {t:'你擅长在不同类型的任务之间切换，既能独立钻研也能和他人高效协作。', m:[20,27,12,30]},
-  {t:'看到一组数据或市场现象，你会习惯性地想找规律、做预测、看趋势。', m:[17,21,6,30,7]},
-  {t:'发现制度或规则存在不合理之处，你会认真思考改进方案，而不只是抱怨几句。', m:[31,28,34]},
-  {t:'看外语电影或读外文资料时，你会留意语言背后的文化逻辑和独特的表达习惯。', m:[12,34,33,29,32]},
-  {t:'身边的人遇到困难时，你会优先放下手头的事去倾听和帮忙。', m:[25,24,26,28]},
-  {t:'讨论问题时，你常能把看起来不相关的事情联系起来，提出让人意外的新视角。', m:[2,1,22,29]},
-  {t:'你很喜欢那种"想一个问题想到入迷、完全沉浸进去"的状态。', m:[7,8,9,14,16,6,10,17]},
-  {t:'你会主动把学习或工作任务拆解成明确步骤，并设定时间节点来推进。', m:[27,21,18,3,0]},
-  {t:'做选择时，你更看重事情对社会或他人的价值，而不只是个人收益。', m:[25,24,23,5,31,11]},
-  {t:'在团队里你会不自觉地在心里把控进度和方向，提醒大家不要偏离目标。', m:[27,20,30,28]},
-  {t:'你对生命现象——无论是人体运作还是生态系统——有发自内心的好奇。', m:[4,5,23,26,25]},
-  {t:'遇到陌生问题时，你的本能反应是把它拆成几个小问题，再逐一分析。', m:[15,16,18,19,13,6]},
-  {t:'你希望未来的工作能接触不同文化背景的人和事，而不是只局限在单一环境里。', m:[34,33,12,31,30,29]}
+const QBASE = [
+  {t:'你对人类文化、历史、语言或艺术有发自内心的兴趣。', dim:0, po:0},
+  {t:'你更倾向于从人文关怀和社会视角去理解问题。', dim:0, po:0},
+  {t:'你对自然科学的原理和发现规律充满好奇。', dim:0, po:1},
+  {t:'你喜欢用科学的方法和视角来解释自然现象。', dim:0, po:1},
+  {t:'你喜欢花时间思考抽象的概念和理论问题。', dim:1, po:0},
+  {t:'你享受在脑海中推演一个想法的各种可能性。', dim:1, po:0},
+  {t:'你更倾向于直接动手尝试，在实践中学习和验证。', dim:1, po:1},
+  {t:'你更喜欢能看到具体成果、有实际应用价值的任务。', dim:1, po:1},
+  {t:'你有明确的读研或读博计划，希望从事科研或学术工作。', dim:2, po:0},
+  {t:'你希望大学期间参与教授的前沿科研项目。', dim:2, po:0},
+  {t:'选择专业时你最看重就业市场的竞争力和薪资回报。', dim:2, po:1},
+  {t:'你希望毕业后尽快进入职场积累实际工作经验。', dim:2, po:1}
 ];
+
+// Each type: m=all majors in type, ex=3 extra Qs with weight maps {idx:[w1..w5]}
+const TYPES = {
+  'HAR':{pt:'人文 · 抽象 · 研究', m:[25,28],
+    ex:[
+      {t:'你对文学创作和文学理论的兴趣大于哲学和历史研究。', map:{25:[5,4,3,2,1],28:[1,2,3,4,5]}},
+      {t:'你更偏向中国古代文学研究而非西方文艺理论。', map:{25:[5,4,3,2,1],28:[1,2,3,4,5]}},
+      {t:'你对新闻传播和新媒体的兴趣大于传统文献研究。', map:{25:[1,2,3,4,5],28:[5,4,3,2,1]}}
+    ]},
+  'HAJ':{pt:'人文 · 抽象 · 就业', m:[31,32,30,18],
+    ex:[
+      {t:'你对数字技术和经济数据的兴趣大于戏剧影视创作。', map:{31:[1,2,3,4,5],32:[5,4,3,2,1],30:[5,4,3,2,1],18:[2,3,4,5,5]}},
+      {t:'你更倾向于用技术手段解决商业问题而非语言法律工具。', map:{31:[1,2,3,4,5],32:[5,4,3,2,1],30:[5,4,3,2,1],18:[1,2,3,4,5]}},
+      {t:'你对跨境法律事务和语言文化交流的兴趣大于产业经济分析。', map:{31:[5,4,3,2,1],32:[3,4,5,4,3],30:[1,2,3,4,5],18:[5,4,3,2,1]}}
+    ]},
+  'HPR':{pt:'人文 · 实践 · 研究', m:[24,29,27],
+    ex:[
+      {t:'你对社会结构和运行机制的兴趣大于语言文化现象。', map:{24:[1,2,3,4,5],29:[5,4,3,2,1],27:[3,4,5,5,5]}},
+      {t:'你更倾向用实证方法研究社会问题而非文学文本分析。', map:{24:[1,2,3,4,5],29:[5,4,3,2,1],27:[3,4,5,5,5]}},
+      {t:'你对法律条文和国际规则的兴趣大于社会调查。', map:{24:[5,4,3,2,1],29:[3,4,5,4,3],27:[1,2,3,4,5]}}
+    ]},
+  'HPJ':{pt:'人文 · 实践 · 就业', m:[26,17],
+    ex:[
+      {t:'你对宏观经济和金融市场的兴趣大于企业数字化运营。', map:{26:[1,2,3,4,5],17:[5,4,3,2,1]}},
+      {t:'你更倾向用数据分析做商业决策而非产品运营管理。', map:{26:[1,2,3,4,5],17:[5,4,3,2,1]}},
+      {t:'你希望未来从事投行咨询而非互联网产品经理。', map:{26:[1,2,3,4,5],17:[5,4,3,2,1]}}
+    ]},
+  'SAR':{pt:'科学 · 抽象 · 研究', m:[6,9,8,7],
+    ex:[
+      {t:'你对纯粹数学理论的兴趣大于对宇宙天体的探索。', map:{6:[1,2,3,4,5],9:[5,4,3,2,1],8:[3,4,5,4,3],7:[3,4,5,4,3]}},
+      {t:'你更偏好天文学和空间科学而非纯数理基础研究。', map:{6:[5,4,3,2,1],9:[1,2,3,4,5],8:[0,1,2,3,4],7:[0,1,2,3,4]}},
+      {t:'你倾向于在单一学科深耕而非跨学科自由组合。', map:{6:[1,2,3,4,5],9:[1,2,3,4,5],8:[5,4,3,2,1],7:[5,4,3,2,1]}}
+    ]},
+  'SAJ':{pt:'科学 · 抽象 · 就业', m:[14,13,15,23,16],
+    ex:[
+      {t:'你对底层算法和系统架构的兴趣大于AI模型应用。', map:{14:[1,2,3,4,5],13:[5,4,3,2,1],15:[3,4,5,4,3],23:[2,3,4,5,5],16:[4,5,5,4,3]}},
+      {t:'你更倾向用技术解决工程管理问题而非纯软件研发。', map:{14:[3,2,1,0,0],13:[0,1,2,3,4],15:[0,1,2,3,4],23:[1,2,3,4,5],16:[5,4,3,2,1]}},
+      {t:'你对金融科技和量化交易的兴趣大于通用软件开发。', map:{14:[3,4,5,4,3],13:[2,3,4,5,5],15:[1,2,3,4,5],23:[2,3,4,5,5],16:[3,4,5,4,3]}}
+    ]},
+  'SPR':{pt:'科学 · 实践 · 研究', m:[2,11,19,21,4,5,20],
+    ex:[
+      {t:'你对芯片和智能硬件的兴趣大于生命健康与环境领域。', map:{2:[1,2,3,4,5],11:[1,2,3,4,5],19:[1,2,3,4,5],21:[5,4,3,2,1],4:[5,4,3,2,1],5:[5,4,3,2,1],20:[5,4,3,2,1]}},
+      {t:'你更偏向工程技术研发而非基础生命科学研究。', map:{2:[1,2,3,4,5],11:[1,2,3,4,5],19:[1,2,3,4,5],21:[5,4,3,2,1],4:[5,4,3,2,1],5:[4,5,5,4,3],20:[5,4,3,2,1]}},
+      {t:'你对临床医学和人体健康的兴趣大于地球环境科学。', map:{2:[1,2,3,4,5],11:[0,1,2,3,4],19:[0,1,2,3,4],21:[1,2,3,4,5],4:[3,4,5,4,3],5:[5,4,3,2,1],20:[3,2,1,0,0]}}
+    ]},
+  'SPJ':{pt:'科学 · 实践 · 就业', m:[0,1,3,10,12,22],
+    ex:[
+      {t:'你对信息电子技术的兴趣大于建筑设计和传统工程。', map:{0:[3,2,1,0,0],1:[5,4,3,2,1],3:[2,1,0,0,0],10:[1,2,3,4,5],12:[1,2,3,4,5],22:[5,4,3,2,1]}},
+      {t:'你更倾向与人打交道的临床应用而非纯技术工程。', map:{0:[5,4,3,2,1],1:[5,4,3,2,1],3:[5,4,3,2,1],10:[5,4,3,2,1],12:[5,4,3,2,1],22:[1,2,3,4,5]}},
+      {t:'你对建筑空间和城市设计的兴趣大于电子信息技术。', map:{0:[1,2,3,4,5],1:[1,2,3,4,5],3:[1,2,3,4,5],10:[5,4,3,2,1],12:[5,4,3,2,1],22:[3,4,5,4,3]}}
+    ]}
+};
 
 const L = [{v:1,l:'完全不符合',n:'①'},{v:2,l:'不符合',n:'②'},{v:3,l:'中立',n:'③'},{v:4,l:'符合',n:'④'},{v:5,l:'完全符合',n:'⑤'}];
-let cur=0, ans=[];
+let cur=0, ans=[], extraQ=[], totalQ=15;
 const A=document.getElementById('dynamicArea'),F=document.getElementById('progressFill'),Lb=document.getElementById('progressLabel');
 
-function q() {
-  if(cur>=Q.length){r();return;}
-  const qc=Q[cur];
-  A.innerHTML=`<div class="slide"><div class="q-number">第 ${cur+1}/${Q.length} 题</div><div class="q-statement">${qc.t}</div><div class="likert">${L.map(l=>`<div class="likert-opt${ans[cur]===l.v?' selected':''}" data-v="${l.v}" onclick="p(this,${l.v})" onmousemove="m(this,event)"><span class="num">${l.n}</span><span class="lbl">${l.l}</span></div>`).join('')}</div><div class="actions"><button class="btn btn-ghost" onclick="b()" ${cur===0?'disabled':''}>← 上一题</button><button class="btn btn-primary" id="nx" onclick="n()" ${ans[cur]===undefined?'disabled':''}>下一题 →</button></div></div>`;
+function dimAvg(di, pi){
+  let s=0,c=0;
+  for(let i=0;i<QBASE.length;i++){if(ans[i]===undefined)continue;const q=QBASE[i];if(q.dim===di&&q.po===pi){s+=ans[i];c++;}}
+  return c>0?s/c:0;
+}
+function getType(){
+  let code='';
+  for(let d=0;d<3;d++){
+    const a0=dimAvg(d,0),a1=dimAvg(d,1);
+    code+=a0>=a1?DIM[d].cd:DIM[d].oc;
+  }
+  return code;
+}
+function setExtra(){
+  const t=TYPES[getType()];
+  extraQ=t&&t.ex?t.ex:[];
+}
+function getBestMajor(){
+  const t=TYPES[getType()];
+  if(!t||!t.m||!t.m.length)return null;
+  const scores={};
+  t.m.forEach(mi=>scores[mi]=0);
+  for(let ei=0;ei<extraQ.length;ei++){
+    const av=ans[12+ei];
+    if(av===undefined)continue;
+    Object.entries(extraQ[ei].map).forEach(([mi,w])=>scores[parseInt(mi)]+=(w[av-1]||0));
+  }
+  return t.m.reduce((best,mi)=>scores[mi]>(scores[best]||-1)?mi:best,t.m[0]);
+}
+function showQuestion(){
+  if(cur>=totalQ){r();return;}
+  let text;
+  if(cur<12){
+    text=QBASE[cur].t;
+  }else{
+    const ei=cur-12;
+    if(ei>=extraQ.length){r();return;}
+    text=extraQ[ei].t;
+  }
+  A.innerHTML=`<div class="slide"><div class="q-number">第 ${cur+1}/${totalQ} 题</div><div class="q-statement">${text}</div><div class="likert">${L.map(l=>`<div class="likert-opt${ans[cur]===l.v?' selected':''}" data-v="${l.v}" onclick="p(this,${l.v})" onmousemove="m(this,event)"><span class="num">${l.n}</span><span class="lbl">${l.l}</span></div>`).join('')}</div><div class="actions"><button class="btn btn-ghost" onclick="b()" ${cur===0?'disabled':''}>← 上一题</button><button class="btn btn-primary" id="nx" onclick="n()" ${ans[cur]===undefined?'disabled':''}>${cur<totalQ-1?'下一题 →':'查看结果'}</button></div></div>`;
   u();
 }
 function m(el,e){el.style.setProperty('--mx',(e.offsetX/el.offsetWidth*100)+'%');el.style.setProperty('--my',(e.offsetY/el.offsetHeight*100)+'%');}
 function p(el,v){
   ans[cur]=v;
   document.querySelectorAll('.likert-opt').forEach(o=>o.classList.toggle('selected',parseInt(o.dataset.v)===v));
-  // ripple
   const r=document.createElement('span');
   r.style.cssText='position:absolute;border-radius:50%;background:rgba(206,147,216,0.4);width:20px;height:20px;left:'+(el.offsetWidth/2-10)+'px;top:'+(el.offsetHeight/2-10)+'px;transform:scale(0);animation:rippleBurst 0.5s ease-out forwards;pointer-events:none;';
-  el.appendChild(r);
-  setTimeout(()=>r.remove(),600);
-  // burst particles
+  el.appendChild(r);setTimeout(()=>r.remove(),600);
   for(let i=0;i<6;i++){
     const p=document.createElement('span');
     const a=Math.random()*360*Math.PI/180,d=30+Math.random()*40;
     p.style.cssText=`position:absolute;width:${3+Math.random()*4}px;height:${3+Math.random()*4}px;border-radius:50%;background:${['#ce93d8','#e1bee7','#7c4dff','#fff'][Math.floor(Math.random()*4)]};left:${el.offsetWidth/2-2}px;top:${el.offsetHeight/2-2}px;pointer-events:none;animation:particleFly 0.5s ease-out forwards;--px:${Math.cos(a)*d}px;--py:${Math.sin(a)*d}px;`;
-    el.appendChild(p);
-    setTimeout(()=>p.remove(),550);
+    el.appendChild(p);setTimeout(()=>p.remove(),550);
   }
   document.getElementById('nx').disabled=false;
-  if(cur<Q.length-1) setTimeout(n,400);
-  else setTimeout(n,300);
+  setTimeout(n,350);
 }
-function n(){if(ans[cur]===undefined)return;cur++;if(cur>=Q.length)r();else q();}
-function b(){if(cur===0)return;cur--;q();}
-function u(){F.style.width=(cur/Q.length*100)+'%';Lb.textContent=cur+'/'+Q.length;}
+function n(){
+  if(ans[cur]===undefined)return;
+  if(cur===11){setExtra();}
+  cur++;
+  if(cur>=totalQ){r();return;}
+  showQuestion();
+}
+function b(){if(cur===0)return;cur--;showQuestion();}
+function u(){F.style.width=(cur/totalQ*100)+'%';Lb.textContent=Math.min(cur+1,totalQ)+'/'+totalQ;}
 
 function r(){
-  let sc=new Array(M.length).fill(0),qc=new Array(M.length).fill(0);
-  for(let i=0;i<Q.length;i++){
-    const ra=ans[i];if(ra===undefined)continue;
-    Q[i].m.forEach(idx=>{sc[idx]+=ra;qc[idx]++;});
+  const code=getType();
+  const mi=getBestMajor();
+  const mm=mi!==null?M[mi]:null;
+  const cls=['d0','d1','d2'];
+  let html='<div class="type-block">';
+  html+=`<div class="type-code">`;
+  for(let d=0;d<3;d++){
+    const ch=code[d];
+    html+=`<span class="type-letter ${cls[d]}">${ch}</span>`;
   }
-  let bi=0,bs=-1;
-  for(let i=0;i<M.length;i++){const a=qc[i]>0?sc[i]/qc[i]:0;if(a>bs){bs=a;bi=i;}}
-  const m=M[bi];
+  html+=`</div>`;
+  const dimNames=code.split('').map((ch,d)=>ch===DIM[d].cd?DIM[d].lb:DIM[d].op);
+  html+=`<div class="type-dim-labels">${dimNames.map((n,d)=>`<span class="dl">${n}</span>`).join('<span style="color:rgba(255,255,255,0.12)"> · </span>')}</div>`;
+  html+=`</div>`;
+
+  if(mm){
+    html+=`<div class="result-card">
+      <div class="icon">${mm.i}</div>
+      <div class="name">${mm.n}</div>
+      <div class="dept">${mm.d}</div>
+    </div>
+    <div class="result-section"><div class="s-label">📖 专业简介</div><div class="s-text">${mm.io}</div></div>
+    <div class="result-section"><div class="s-label">⭐ 招生特色</div><div class="s-text">${mm.f}</div></div>
+    <a class="full-link" href="https://bkzs.nju.edu.cn/zsw/zydd.html" target="_blank">📋 查看南京大学招生详情 →</a>
+    <div class="result-daily"><div class="label">🎒 你的南大日常</div><div class="text">${mm.da}</div></div>`;
+  }
+  html+=`<div class="result-actions"><button class="btn btn-primary" onclick="s('${code}')">📤 分享结果</button><button class="btn btn-ghost" onclick="rst()">🔄 重新测试</button></div>`;
   A.className='result-area';
-  A.innerHTML=`<div class="result-icon">${m.i}</div><div class="result-title">${m.t}</div><div class="result-sub">✦ NJUti 为你匹配</div><div class="result-major-box"><div class="major">${m.n}</div><div class="dept">${m.d}</div></div><div class="result-section"><div class="s-label">📖 专业简介</div><div class="s-text">${m.io}</div></div><div class="result-section"><div class="s-label">⭐ 招生特色</div><div class="s-text">${m.f}</div></div><a class="full-link" href="https://bkzs.nju.edu.cn/zsw/zydd.html" target="_blank">📋 查看南京大学招生详情 →</a><div class="result-daily"><div class="label">🎒 你的南大日常</div><div class="text">${m.da}</div></div><div class="result-actions"><button class="btn btn-primary" onclick="s(${bi})">📤 分享结果</button><button class="btn btn-ghost" onclick="rst()">🔄 重新测试</button></div>`;
-  F.style.width='100%';Lb.textContent=Q.length+'/'+Q.length+' ✓';
+  A.innerHTML=html;
+  F.style.width='100%';Lb.textContent=totalQ+'/'+totalQ+' ✓';
 }
-function s(i){const m=M[i];const t='🎓【NJUti】最适合我的南大专业是「'+m.n+'」— '+m.t+'！\n快来测测你与南大哪个专业最匹配 👉';if(navigator.share)navigator.share({title:'NJUti',text:t});else navigator.clipboard.writeText(t).then(()=>alert('结果已复制，快去分享给小伙伴吧！'));}
-function rst(){cur=0;ans=[];A.className='';q();}
+function s(code){
+  const t=TYPES[code];
+  const mi=getBestMajor();
+  const mn=mi!==null?M[mi].n:'南大专业';
+  const u='https://butterjack07.github.io/play/njuti.html';
+  const tx='🎓【NJUti】我的类型是「'+code+'」— 最适合的专业是「'+mn+'」！\n15道题·三维评估，测测你的南大专业匹配 👉 '+u;
+  if(navigator.share)navigator.share({title:'NJUti',text:tx});else navigator.clipboard.writeText(tx).then(()=>alert('结果已复制，快去分享给小伙伴吧！'));
+}
+function rst(){cur=0;ans=[];extraQ=[];totalQ=15;A.className='';showQuestion();}
 (function(){const c=document.getElementById('stars');for(let i=0;i<80;i++){const s=document.createElement('div');s.className='star';s.style.left=Math.random()*100+'%';s.style.top=Math.random()*100+'%';s.style.setProperty('--dur',(2+Math.random()*4)+'s');s.style.animationDelay=Math.random()*4+'s';s.style.width=s.style.height=(1+Math.random()*2)+'px';c.appendChild(s);}})();
-q();
+showQuestion();
 </script>
 </body>
 </html>
