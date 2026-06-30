@@ -149,6 +149,38 @@
   .stars { position: fixed; top: 0; left: 0; right: 0; bottom: 0; pointer-events: none; z-index: 0; overflow: hidden; }
   .star { position: absolute; width: 2px; height: 2px; background: #fff; border-radius: 50%; opacity: 0.3; animation: twinkle var(--dur) ease-in-out infinite alternate; }
   @keyframes twinkle { 0% { opacity: 0.1; transform: scale(0.8); } 100% { opacity: 0.5; transform: scale(1.2); } }
+  .admission-letter {
+    background: linear-gradient(135deg, #fdf6e3, #fef9ef);
+    border: 2px solid #d4a74a;
+    border-radius: 20px;
+    padding: 28px 24px;
+    margin-bottom: 24px;
+    text-align: center;
+    box-shadow: 0 8px 40px rgba(212,167,74,0.15), inset 0 0 80px rgba(212,167,74,0.04);
+    position: relative;
+  }
+  .admission-letter::before {
+    content: '★'; position: absolute; top: 10px; right: 16px;
+    font-size: 20px; color: rgba(212,167,74,0.15);
+  }
+  .admission-letter::after {
+    content: '★'; position: absolute; bottom: 10px; left: 16px;
+    font-size: 20px; color: rgba(212,167,74,0.15);
+  }
+  .al-badge { display:inline-block; background:linear-gradient(135deg,#d4a74a,#b8860b); color:#fff; font-size:11px; font-weight:700; letter-spacing:2px; padding:4px 18px; border-radius:20px; margin-bottom:14px; }
+  .al-school { color:#1a0533; font-size:26px; font-weight:900; letter-spacing:4px; }
+  .al-school-en { color:#b8860b; font-size:12px; letter-spacing:2px; margin-bottom:12px; }
+  .al-line { width:60px; height:2px; background:linear-gradient(90deg,transparent,#d4a74a,transparent); margin:12px auto; }
+  .al-greeting { color:#5a4a3a; font-size:14px; text-align:left; margin-bottom:6px; }
+  .al-body { color:#3a2a1a; font-size:14px; line-height:1.8; text-align:left; margin-bottom:8px; }
+  .al-major { font-size:20px; font-weight:900; color:#6a1b9a; letter-spacing:2px; margin:8px 0; }
+  .al-footer { color:#8a7a6a; font-size:12px; margin-top:12px; padding-top:10px; border-top:1px dashed #d4a74a; display:flex; justify-content:space-between; align-items:center; }
+  .al-seal {
+    display:inline-block; width:52px; height:52px; border:2px solid #c62828; border-radius:50%;
+    color:#c62828; font-size:9px; font-weight:700; line-height:1.3;
+    display:flex; align-items:center; justify-content:center; flex-shrink:0;
+    transform:rotate(-8deg);
+  }
   .footer { text-align: center; margin-top: 18px; color: rgba(255,255,255,0.15); font-size: 12px; letter-spacing: 1px; }
 </style>
 </head>
@@ -477,13 +509,18 @@ function r(){
       <div style="font-size:56px;margin-bottom:8px;">😅</div>
       <div style="color:#fff;font-size:22px;font-weight:800;margin-bottom:6px;">经过严谨（并不）的三维评估</div>
       <div style="color:rgba(255,255,255,0.5);font-size:14px;margin-bottom:20px;">我们发现你的气质与南京大学不太匹配……<br>不过别灰心，南京还有另一所985：</div>
-      <div class="result-card" style="background:linear-gradient(135deg,rgba(30,100,200,0.2),rgba(0,50,150,0.15));border-color:rgba(30,100,200,0.3)">
-        <div style="font-size:44px;margin-bottom:6px;">🏫</div>
-        <div style="color:#fff;font-size:24px;font-weight:800;">东南大学</div>
-        <div style="color:rgba(255,255,255,0.4);font-size:14px;margin-top:4px;">Southeast University · 四牌楼影视基地</div>
+      <div class="admission-letter" style="background:linear-gradient(135deg,#e8f0fe,#f0f4ff);border-color:#1a5bb5;box-shadow:0 8px 40px rgba(26,91,181,0.15)">
+        <div class="al-badge" style="background:linear-gradient(135deg,#1a5bb5,#0d3b7a)">★ 录取通知书</div>
+        <div class="al-school" style="color:#0d3b7a">东南大学</div>
+        <div class="al-school-en" style="color:#1a5bb5">SOUTHEAST UNIVERSITY</div>
+        <div class="al-line" style="background:linear-gradient(90deg,transparent,#1a5bb5,transparent)"></div>
+        <div class="al-greeting">同学：</div>
+        <div class="al-body">经审核，你被我校</div>
+        <div class="al-major" style="color:#0d3b7a">四牌楼影视基地 · 九龙湖高级技工学校</div>
+        <div class="al-body">录取。<br>请于2026年9月来校报到——地铁就几站路，记得常来南大找我玩。</div>
+        <div class="al-footer"><span>东南大学招生办公室</span><span class="al-seal" style="color:#0d3b7a;border-color:#0d3b7a">东南<br>大学</span></div>
       </div>
-      <div class="result-section"><div class="s-label">🏛️ 学校简介</div><div class="s-text">南大在鼓楼，东大在四牌楼——隔了一条街，却是两种画风。东大以建筑、土木、电子信息名扬天下，校园里的大礼堂和涌泉池常年承包各种电视剧取景。九龙湖校区则以其辽阔（和妖风）著称，人称"九龙湖高级技工学校"。</div></div>
-      <div class="result-section"><div class="s-label">🤝 与南大的关系</div><div class="s-text">曾经的国立中央大学嫡系兄弟，如今各闯一片天。两校学生常在考研季互相串门，在虎踞关小吃街狭路相逢。如果你去了东大，记得常来南大找我玩——地铁就几站路，我请你吃食堂。</div></div>
+      <div class="result-section"><div class="s-label">🤝 与南大的关系</div><div class="s-text">曾经的国立中央大学嫡系兄弟，如今各闯一片天。东大以建筑、土木、电子信息名扬天下，校园里的大礼堂和涌泉池常年承包各种电视剧取景。两校学生常在考研季互相串门，在虎踞关小吃街狭路相逢。</div></div>
       <div class="result-actions"><button class="btn btn-primary" onclick="rst()">🔄 重新测试</button><button class="btn btn-ghost" onclick="s_easter('东南大学')">📤 分享</button></div>
     </div>`);
     return;
@@ -493,13 +530,18 @@ function r(){
       <div style="font-size:56px;margin-bottom:8px;">☯️</div>
       <div style="color:#fff;font-size:22px;font-weight:800;margin-bottom:6px;">中庸之道，天人合一</div>
       <div style="color:rgba(255,255,255,0.5);font-size:14px;margin-bottom:20px;">所有选项都选3——你的内心毫无波澜，堪称当代苏格拉底。</div>
-      <div class="result-card" style="background:linear-gradient(135deg,rgba(206,147,216,0.15),rgba(255,193,7,0.15));border-color:rgba(255,193,7,0.25)">
-        <div style="font-size:44px;margin-bottom:6px;">🏛️</div>
-        <div style="color:#fff;font-size:24px;font-weight:800;">国立中央大学</div>
-        <div style="color:rgba(255,255,255,0.4);font-size:14px;margin-top:4px;">National Central University · 1928-1949</div>
+      <div class="admission-letter" style="background:linear-gradient(135deg,#fdf0e0,#fef5e8);border-color:#b8860b;box-shadow:0 8px 40px rgba(184,134,11,0.15)">
+        <div class="al-badge" style="background:linear-gradient(135deg,#8b6914,#b8860b)">★ 录取通知书</div>
+        <div class="al-school" style="color:#5a3e00">国立中央大学</div>
+        <div class="al-school-en" style="color:#8b6914">NATIONAL CENTRAL UNIVERSITY</div>
+        <div class="al-line" style="background:linear-gradient(90deg,transparent,#b8860b,transparent)"></div>
+        <div class="al-greeting">同学：</div>
+        <div class="al-body">经审核，你被我校</div>
+        <div class="al-major" style="color:#5a3e00">不偏不倚学院 · 中庸之道专业</div>
+        <div class="al-body">录取。<br>温馨提示：国立中央大学已于1949年改组，目前仅存在于历史书中。建议你考虑其继承者——南京大学。</div>
+        <div class="al-footer"><span>国立中央大学招生办公室（已停办）</span><span class="al-seal" style="color:#8b6914;border-color:#8b6914">中央<br>大学</span></div>
       </div>
-      <div class="result-section"><div class="s-label">📜 历史溯源</div><div class="s-text">国立中央大学，民国时期中国最高学府，亚洲排名数一数二。1949年改组后，其在宁院系演变为今天的南京大学、东南大学、南京师范大学等一众高校。所以从某种意义上说，你的"中立"选择让你成为了国立中央大学的唯一传人。可惜这所学校已经不在了……</div></div>
-      <div class="result-section"><div class="s-label">😂 友情建议</div><div class="s-text">既然国立中央大学已成历史，不妨考虑一下它的继承者之一——南京大学。虽然我们现在的排名没当年那么夸张了，但鼓楼校区的北大楼还是很好看的，仙林校区的杜厦图书馆也能让你安放那颗不偏不倚的灵魂。</div></div>
+      <div class="result-section"><div class="s-label">😂 友情建议</div><div class="s-text">虽然国立中央大学已成历史，但它的精神遗产仍在。鼓楼校区的北大楼还是很好看的，仙林校区的杜厦图书馆也能让你安放那颗不偏不倚的灵魂。不妨来南大看看？</div></div>
       <div class="result-actions"><button class="btn btn-primary" onclick="rst()">🔄 重新测试</button><button class="btn btn-ghost" onclick="s_easter('国立中央大学')">📤 分享</button></div>
     </div>`);
     return;
@@ -509,12 +551,17 @@ function r(){
       <div style="font-size:56px;margin-bottom:8px;">🌟</div>
       <div style="color:#fff;font-size:22px;font-weight:800;margin-bottom:6px;">恭喜！六边形战士！</div>
       <div style="color:rgba(255,255,255,0.5);font-size:14px;margin-bottom:20px;">你对所有问题都充满自信——你就是南大要找的那个人。</div>
-      <div class="result-card" style="background:linear-gradient(135deg,rgba(206,147,216,0.25),rgba(124,77,255,0.25));border-color:#ce93d8">
-        <div style="font-size:44px;margin-bottom:6px;">🎉</div>
-        <div style="color:#fff;font-size:24px;font-weight:800;">南京大学 · 全专业通吃</div>
-        <div style="color:rgba(255,255,255,0.4);font-size:14px;margin-top:4px;">专业随便报！什么专业都适合你</div>
+      <div class="admission-letter" style="background:linear-gradient(135deg,#f3e8ff,#faf0ff);border-color:#9c27b0">
+        <div class="al-badge" style="background:linear-gradient(135deg,#9c27b0,#6a1b9a)">★ 录取通知书</div>
+        <div class="al-school">南京大学</div>
+        <div class="al-school-en" style="color:#9c27b0">NANJING UNIVERSITY</div>
+        <div class="al-line" style="background:linear-gradient(90deg,transparent,#9c27b0,transparent)"></div>
+        <div class="al-greeting">同学：</div>
+        <div class="al-body">经审核，你被我校</div>
+        <div class="al-major">全专业通吃 · 六边形战士班</div>
+        <div class="al-body">录取。<br>专业随便报！南京大学什么专业都适合你——人文素养拉满、科学精神拉满、你就是传说中的六边形南大人。</div>
+        <div class="al-footer"><span>南京大学招生办公室</span><span class="al-seal">招生<br>专用</span></div>
       </div>
-      <div class="result-section"><div class="s-label">💪 评估结论</div><div class="s-text">人文素养你拉满，科学精神你拉满，抽象思维你拉满，动手实践你拉满，学术研究你拉满，就业信心你拉满——你就是传说中的六边形南大人。无论你走进哪个专业的课堂，教授都会觉得你天赋异禀；无论你参加什么社团，社长都会把你当骨干培养。</div></div>
       <div class="result-section"><div class="s-label">🎯 温馨提醒</div><div class="s-text">不过话说回来，什么都拉满其实等于什么都没测出来（笑）。建议你回头认真做一遍，毕竟选专业是人生大事——当然，如果你真的每个方面都这么强，南京大学确实每个专业都欢迎你。</div></div>
       <div class="result-actions"><button class="btn btn-primary" onclick="rst()">🔄 重新测试</button><button class="btn btn-ghost" onclick="s_easter('南京大学')">📤 分享</button></div>
     </div>`);
@@ -537,15 +584,22 @@ function r(){
   html+=`</div>`;
 
   if(mm){
-    html+=`<div class="result-card">
-      <div class="icon">${mm.i}</div>
-      <div class="name">${mm.n}</div>
-      <div class="dept">${mm.d}</div>
+    const daText=(DA_VARIANTS[mi]||[mm.da])[Math.floor(Math.random()*3)];
+    html+=`<div class="admission-letter">
+      <div class="al-badge">★ 录取通知书</div>
+      <div class="al-school">南京大学</div>
+      <div class="al-school-en">NANJING UNIVERSITY</div>
+      <div class="al-line"></div>
+      <div class="al-greeting">同学：</div>
+      <div class="al-body">经审核，你被我校</div>
+      <div class="al-major">${mm.n}</div>
+      <div class="al-body">录取。<br>请于2026年9月来校报到，开启你的南大时光。</div>
+      <div class="al-footer"><span>南京大学招生办公室</span><span class="al-seal">招生<br>专用</span></div>
     </div>
     <div class="result-section"><div class="s-label">📖 专业简介</div><div class="s-text">${mm.io}</div></div>
     <div class="result-section"><div class="s-label">⭐ 招生特色</div><div class="s-text">${mm.f}</div></div>
     <a class="full-link" href="https://bkzs.nju.edu.cn/zsw/zydd.html" target="_blank">📋 查看南京大学招生详情 →</a>
-    <div class="result-daily"><div class="label">🎒 你的南大日常</div><div class="text">${(DA_VARIANTS[mi]||[mm.da])[Math.floor(Math.random()*3)]}</div></div>`;
+    <div class="result-daily"><div class="label">🎒 你的南大日常</div><div class="text">${daText}</div></div>`;
   }
   html+=`<div class="result-actions"><button class="btn btn-primary" onclick="s('${code}')">📤 分享结果</button><button class="btn btn-ghost" onclick="rst()">🔄 重新测试</button></div>`;
   A.className='result-area';
