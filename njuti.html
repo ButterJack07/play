@@ -182,6 +182,14 @@
     transform:rotate(-8deg);
   }
   .footer { text-align: center; margin-top: 18px; color: rgba(255,255,255,0.15); font-size: 12px; letter-spacing: 1px; }
+  .mini-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(130px,1fr)); gap:10px; margin-bottom:20px; }
+  .mini-card {
+    background:linear-gradient(135deg,#fdf6e3,#fef9ef); border:1.5px solid #d4a74a; border-radius:12px;
+    padding:10px 6px; text-align:center; transition:all 0.2s; cursor:default;
+  }
+  .mini-card:hover { transform:translateY(-3px); box-shadow:0 6px 20px rgba(212,167,74,0.2); }
+  .mini-card .icon { font-size:22px; margin-bottom:2px; }
+  .mini-card .name { color:#3a2a1a; font-size:11px; font-weight:700; line-height:1.3; }
 </style>
 </head>
 <body>
@@ -547,21 +555,20 @@ function r(){
     return;
   }
   if(allSame&&allVals[0]===5){
+    const allMajors=M.map((m,i)=>`<div class="mini-card"><div class="icon">${m.i}</div><div class="name">${m.n}</div></div>`).join('');
     setRes(`<div style="text-align:center;animation:fadeSlideIn 0.6s ease forwards">
       <div style="font-size:56px;margin-bottom:8px;">🌟</div>
       <div style="color:#fff;font-size:22px;font-weight:800;margin-bottom:6px;">恭喜！六边形战士！</div>
-      <div style="color:rgba(255,255,255,0.5);font-size:14px;margin-bottom:20px;">你对所有问题都充满自信——你就是南大要找的那个人。</div>
+      <div style="color:rgba(255,255,255,0.5);font-size:14px;margin-bottom:20px;">你对所有问题都充满自信——南京大学33个专业，统统欢迎你！</div>
       <div class="admission-letter" style="background:linear-gradient(135deg,#f3e8ff,#faf0ff);border-color:#9c27b0">
         <div class="al-badge" style="background:linear-gradient(135deg,#9c27b0,#6a1b9a)">★ 录取通知书</div>
         <div class="al-school">南京大学</div>
         <div class="al-school-en" style="color:#9c27b0">NANJING UNIVERSITY</div>
         <div class="al-line" style="background:linear-gradient(90deg,transparent,#9c27b0,transparent)"></div>
         <div class="al-greeting">同学：</div>
-        <div class="al-body">经审核，你被我校</div>
-        <div class="al-major">全专业通吃 · 六边形战士班</div>
-        <div class="al-body">录取。<br>专业随便报！南京大学什么专业都适合你——人文素养拉满、科学精神拉满、你就是传说中的六边形南大人。</div>
-        <div class="al-footer"><span>南京大学招生办公室</span><span class="al-seal">招生<br>专用</span></div>
+        <div class="al-body">经审核，你被南京大学以下全部专业录取：</div>
       </div>
+      <div class="mini-grid">${allMajors}</div>
       <div class="result-section"><div class="s-label">🎯 温馨提醒</div><div class="s-text">不过话说回来，什么都拉满其实等于什么都没测出来（笑）。建议你回头认真做一遍，毕竟选专业是人生大事——当然，如果你真的每个方面都这么强，南京大学确实每个专业都欢迎你。</div></div>
       <div class="result-actions"><button class="btn btn-primary" onclick="rst()">🔄 重新测试</button><button class="btn btn-ghost" onclick="s_easter('南京大学')">📤 分享</button></div>
     </div>`);
@@ -569,8 +576,9 @@ function r(){
   }
 
   const code=getType();
-  const mi=getBestMajor();
-  const mm=mi!==null?M[mi]:null;
+  let mi=getBestMajor();
+  if(mi===null){mi=Math.floor(Math.random()*M.length);}
+  const mm=M[mi];
   const cls=['d0','d1','d2'];
   let html='<div class="type-block">';
   html+=`<div class="type-code">`;
