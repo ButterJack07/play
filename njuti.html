@@ -201,6 +201,9 @@
   }
   .name-input:focus { border-color:#ce93d8; box-shadow:0 0 20px rgba(206,147,216,0.15); }
   .name-input::placeholder { color:rgba(255,255,255,0.2); font-weight:400; }
+  .result-link { color:rgba(255,255,255,0.2); font-size:12px; margin:6px 0 18px; letter-spacing:0.5px; }
+  .result-link a { color:rgba(206,147,216,0.5); text-decoration:none; }
+  .result-link a:hover { color:#ce93d8; }
 </style>
 </head>
 <body>
@@ -543,7 +546,8 @@ function r(){
     setRes(`<div style="text-align:center;animation:fadeSlideIn 0.6s ease forwards">
       <div style="font-size:56px;margin-bottom:8px;">😅</div>
       <div style="color:#fff;font-size:22px;font-weight:800;margin-bottom:6px;">经过严谨（并不）的三维评估</div>
-      <div style="color:rgba(255,255,255,0.5);font-size:14px;margin-bottom:20px;">我们发现你的气质与南京大学不太匹配……<br>不过别灰心，南京还有另一所985：</div>
+      <div style="color:rgba(255,255,255,0.5);font-size:14px;margin-bottom:12px;">我们发现你的气质与南京大学不太匹配……<br>不过别灰心，南京还有另一所985：</div>
+      <div class="result-link" style="margin:0 0 16px;">15道题 · 找到和你最有缘分的南大专业 — <a href="https://butterjack07.github.io/play/njuti.html" target="_blank">butterjack07.github.io/play/njuti</a></div>
       <div class="admission-letter" style="background:linear-gradient(135deg,#e8f0fe,#f0f4ff);border-color:#1a5bb5;box-shadow:0 8px 40px rgba(26,91,181,0.15)">
         <div class="al-badge" style="background:linear-gradient(135deg,#1a5bb5,#0d3b7a)">★ 录取通知书</div>
         <div class="al-school" style="color:#0d3b7a">东南大学</div>
@@ -564,7 +568,8 @@ function r(){
     setRes(`<div style="text-align:center;animation:fadeSlideIn 0.6s ease forwards">
       <div style="font-size:56px;margin-bottom:8px;">☯️</div>
       <div style="color:#fff;font-size:22px;font-weight:800;margin-bottom:6px;">中庸之道，天人合一</div>
-      <div style="color:rgba(255,255,255,0.5);font-size:14px;margin-bottom:20px;">所有选项都选3——你的内心毫无波澜，堪称当代苏格拉底。</div>
+      <div style="color:rgba(255,255,255,0.5);font-size:14px;margin-bottom:12px;">所有选项都选3——你的内心毫无波澜，堪称当代苏格拉底。</div>
+      <div class="result-link" style="margin:0 0 16px;">15道题 · 找到和你最有缘分的南大专业 — <a href="https://butterjack07.github.io/play/njuti.html" target="_blank">butterjack07.github.io/play/njuti</a></div>
       <div class="admission-letter" style="background:linear-gradient(135deg,#fdf0e0,#fef5e8);border-color:#b8860b;box-shadow:0 8px 40px rgba(184,134,11,0.15)">
         <div class="al-badge" style="background:linear-gradient(135deg,#8b6914,#b8860b)">★ 录取通知书</div>
         <div class="al-school" style="color:#5a3e00">国立中央大学</div>
@@ -586,7 +591,8 @@ function r(){
     setRes(`<div style="text-align:center;animation:fadeSlideIn 0.6s ease forwards">
       <div style="font-size:56px;margin-bottom:8px;">🌟</div>
       <div style="color:#fff;font-size:22px;font-weight:800;margin-bottom:6px;">恭喜！六边形战士！</div>
-      <div style="color:rgba(255,255,255,0.5);font-size:14px;margin-bottom:20px;">你对所有问题都充满自信——南京大学33个专业，统统欢迎你！</div>
+      <div style="color:rgba(255,255,255,0.5);font-size:14px;margin-bottom:12px;">你对所有问题都充满自信——南京大学33个专业，统统欢迎你！</div>
+      <div class="result-link" style="margin:0 0 16px;">15道题 · 找到和你最有缘分的南大专业 — <a href="https://butterjack07.github.io/play/njuti.html" target="_blank">butterjack07.github.io/play/njuti</a></div>
       <div class="admission-letter" style="background:linear-gradient(135deg,#f3e8ff,#faf0ff);border-color:#9c27b0">
         <div class="al-badge" style="background:linear-gradient(135deg,#9c27b0,#6a1b9a)">★ 录取通知书</div>
         <div class="al-school">南京大学</div>
@@ -617,6 +623,7 @@ function r(){
   const dimNames=code.split('').map((ch,d)=>ch===DIM[d].cd?DIM[d].lb:DIM[d].op);
   html+=`<div class="type-dim-labels">${dimNames.map((n,d)=>`<span class="dl">${n}</span>`).join('<span style="color:rgba(255,255,255,0.12)"> · </span>')}</div>`;
   html+=`</div>`;
+  html+=`<div class="result-link">15道题 · 找到和你最有缘分的南大专业 — <a href="https://butterjack07.github.io/play/njuti.html" target="_blank">butterjack07.github.io/play/njuti</a></div>`;
 
   if(mm){
     const daText=(DA_VARIANTS[mi]||[mm.da])[Math.floor(Math.random()*3)];
